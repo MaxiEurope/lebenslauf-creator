@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.MainController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <GridPane hgap="10" vgap="10">
+        <Label text="Vorname:"/>
+        <TextField fx:id="firstNameField" GridPane.columnIndex="1"/>
+        <Label text="Nachname:" GridPane.rowIndex="1"/>
+        <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Geschlecht:" GridPane.rowIndex="2"/>
+        <TextField fx:id="genderField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label text="Geburtsort:" GridPane.rowIndex="3"/>
+        <TextField fx:id="birthPlaceField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label text="Geburtsdatum:" GridPane.rowIndex="4"/>
+        <TextField fx:id="birthDateField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <Label text="Wohnort:" GridPane.rowIndex="5"/>
+        <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+        <Label text="Wohnadresse:" GridPane.rowIndex="6"/>
+        <TextField fx:id="addressField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+        <Label text="PLZ:" GridPane.rowIndex="7"/>
+        <TextField fx:id="postalCodeField" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+        <Label text="Telefonnummer:" GridPane.rowIndex="8"/>
+        <TextField fx:id="phoneNumberField" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+        <Label text="E-Mail:" GridPane.rowIndex="9"/>
+        <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+        <Label text="Berufserfahrung:" GridPane.rowIndex="10"/>
+        <TextArea fx:id="experienceField" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+        <Label text="Bildung:" GridPane.rowIndex="11"/>
+        <TextArea fx:id="educationField" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+    </GridPane>
+    <Button text="Submit" onAction="#handleSubmit"/>
+</VBox>
