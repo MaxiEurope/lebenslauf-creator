@@ -1,4 +1,4 @@
-package org.example;
+package org.lebenslauf;
 
 import java.util.List;
 
@@ -112,5 +112,23 @@ public class Resume {
 
     public void setEducation(List<String> education) {
         this.education = education;
+    }
+
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthPlace='" + birthPlace + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", city='" + city + '\'' +
+                ", address='" + address + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", experience=" + experience +
+                ", education=" + education +
+                '}';
     }
 }

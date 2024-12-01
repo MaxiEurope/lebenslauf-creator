@@ -1,8 +1,5 @@
-package org.example;
+package org.lebenslauf;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -51,15 +48,6 @@ public class MainController {
         resume.setExperience(Arrays.asList(experienceField.getText().split("\\n")));
         resume.setEducation(Arrays.asList(educationField.getText().split("\\n")));
 
-        // JSON serialisieren und ausgeben
-        new Thread(() -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                String json = objectMapper.writeValueAsString(resume);
-                Platform.runLater(() -> System.out.println("Serialized JSON: " + json));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        System.out.println("Resume Data: " + resume.toString());
     }
 }
