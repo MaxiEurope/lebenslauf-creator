@@ -15,6 +15,7 @@ public class Resume {
     private String email;
     private List<String> experience;
     private List<String> education;
+    private String imageBase64;
 
     // Getter und Setter Methoden
 
@@ -114,6 +115,14 @@ public class Resume {
         this.education = education;
     }
 
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
+
     @Override
     public String toString() {
         return "Resume{" +
@@ -129,6 +138,7 @@ public class Resume {
                 ", email='" + email + '\'' +
                 ", experience=" + experience +
                 ", education=" + education +
+                ", imageBase64='" + (imageBase64 != null ? "[Image Data]" : "null") + '\'' +
                 '}';
     }
 }

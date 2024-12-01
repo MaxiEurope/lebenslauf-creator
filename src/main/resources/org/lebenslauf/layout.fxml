@@ -48,5 +48,10 @@
     <Label text="Education:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
     <TextArea fx:id="educationField" prefRowCount="5" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
 
-    <Button text="Submit" onAction="#handleSubmit" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
+    <Button text="Select Image" onAction="#handleImageUpload" GridPane.rowIndex="12" GridPane.columnIndex="0"/>
+    <Label fx:id="imagePathLabel" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
+
+    <Button text="Submit" onAction="#handleSubmit" GridPane.rowIndex="13" GridPane.columnIndex="1"/>
+
+    <Label fx:id="confirmationLabel" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
 </GridPane>

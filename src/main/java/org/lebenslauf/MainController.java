@@ -3,8 +3,15 @@ package org.lebenslauf;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class MainController {
     @FXML
@@ -31,6 +38,45 @@ public class MainController {
     private TextArea experienceField;
     @FXML
     private TextArea educationField;
+
+    @FXML
+    private Label imagePathLabel;
+
+    private String imageBase64;
+
+    @FXML
+    private void handleImageUpload() {
+        Window window = imagePathLabel.getScene().getWindow();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image File");
+
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter(
+                "Image Files", "*.jpg", "*.jpeg", "*.png");
+        fileChooser.getExtensionFilters().add(imageFilter);
+
+        File selectedFile = fileChooser.showOpenDialog(window);
+
+        if (selectedFile != null) {
+            imagePathLabel.setText(selectedFile.getAbsolutePath());
+
+            try {
+                FileInputStream fis = new FileInputStream(selectedFile);
+                byte[] bytes = fis.readAllBytes();
+                fis.close();
+
+                imageBase64 = Base64.getEncoder().encodeToString(bytes);
+
+                System.out.println("Image Base64 String: " + imageBase64);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                imagePathLabel.setText("Error reading file");
+            }
+        } else {
+            imagePathLabel.setText("No file selected");
+        }
+    }
 
     @FXML
     private void handleSubmit() {
