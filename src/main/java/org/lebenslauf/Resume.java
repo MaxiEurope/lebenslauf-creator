@@ -139,6 +139,7 @@ public class Resume {
                 ", city='" + city + '\'' +
                 ", address='" + address + '\'' +
                 ", postalCode='" + postalCode + '\'' +
+                ", nationality:'" + nationality + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
                 ", experience=" + experience +
