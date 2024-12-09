@@ -11,6 +11,7 @@ public class Resume {
     private String city;
     private String address;
     private String postalCode;
+    private String nationality;
     private String phoneNumber;
     private String email;
     private List<String> experience;
@@ -83,6 +84,10 @@ public class Resume {
         this.postalCode = postalCode;
     }
 
+    public String getNationality(){ return nationality; }
+
+    public void setNationality(String nationality) {this.nationality = nationality; }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -141,4 +146,6 @@ public class Resume {
                 ", imageBase64='" + (imageBase64 != null ? "[Image Data]" : "null") + '\'' +
                 '}';
     }
+
+
 }
