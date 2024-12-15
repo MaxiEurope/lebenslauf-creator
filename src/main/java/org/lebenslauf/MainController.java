@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.backend.DBConnect;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +46,12 @@ public class MainController {
     private Label imagePathLabel;
 
     private String imageBase64;
+
+    private DBConnect dbConnect;
+
+    public MainController(DBConnect dbConnect) {
+        this.dbConnect = dbConnect;
+    }
 
     @FXML private void initialize() {
         genderComboBox.getItems().addAll("Männlich", "Weiblich", "Divers");
