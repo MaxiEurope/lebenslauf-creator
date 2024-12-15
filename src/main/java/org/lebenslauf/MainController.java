@@ -19,17 +19,19 @@ public class MainController {
     @FXML
     private TextField lastNameField;
     @FXML
-    private TextField genderField;
+    private ComboBox<String> genderComboBox;
     @FXML
     private TextField birthPlaceField;
     @FXML
-    private TextField birthDateField;
+    private DatePicker birthDateField;
     @FXML
     private TextField cityField;
     @FXML
     private TextField addressField;
     @FXML
     private TextField postalCodeField;
+    @FXML
+    private ComboBox<String> nationalityComboBox;
     @FXML
     private TextField phoneNumberField;
     @FXML
@@ -43,6 +45,11 @@ public class MainController {
     private Label imagePathLabel;
 
     private String imageBase64;
+
+    @FXML private void initialize() {
+        genderComboBox.getItems().addAll("Männlich", "Weiblich", "Divers");
+        nationalityComboBox.getItems().addAll("Deutsch", "Österreichisch", "Schweizerisch", "Andere");
+    }
 
     @FXML
     private void handleImageUpload() {
@@ -83,12 +90,13 @@ public class MainController {
         Resume resume = new Resume();
         resume.setFirstName(firstNameField.getText());
         resume.setLastName(lastNameField.getText());
-        resume.setGender(genderField.getText());
+        resume.setGender(String.valueOf(genderComboBox.getValue()));
         resume.setBirthPlace(birthPlaceField.getText());
-        resume.setBirthDate(birthDateField.getText());
+        resume.setBirthDate(String.valueOf(birthDateField.getValue()));
         resume.setCity(cityField.getText());
         resume.setAddress(addressField.getText());
         resume.setPostalCode(postalCodeField.getText());
+        resume.setNationality(String.valueOf(nationalityComboBox.getValue()));
         resume.setPhoneNumber(phoneNumberField.getText());
         resume.setEmail(emailField.getText());
         resume.setExperience(Arrays.asList(experienceField.getText().split("\\n")));
