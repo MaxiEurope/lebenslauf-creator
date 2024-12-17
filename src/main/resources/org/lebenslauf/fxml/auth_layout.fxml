@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml">
+    <Label text="Login / Register" style="-fx-font-size: 24px;"/>
+    <TabPane prefWidth="400" prefHeight="300">
+        <Tab text="Login">
+            <VBox spacing="10" alignment="CENTER">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <TextField fx:id="loginEmailField" promptText="Email"/>
+                <PasswordField fx:id="loginPasswordField" promptText="Password"/>
+                <Button text="Login" onAction="#handleLogin"/>
+                <Label fx:id="loginMessage" textFill="red"/>
+            </VBox>
+        </Tab>
+        <Tab text="Register">
+            <VBox spacing="10" alignment="CENTER">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <TextField fx:id="registerFullNameField" promptText="Full Name"/>
+                <TextField fx:id="registerEmailField" promptText="Email"/>
+                <PasswordField fx:id="registerPasswordField" promptText="Password"/>
+                <Button text="Register" onAction="#handleRegister"/>
+                <Label fx:id="registerMessage" textFill="red"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

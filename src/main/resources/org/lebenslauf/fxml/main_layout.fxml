@@ -10,7 +10,7 @@
 
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ComboBox?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.lebenslauf.MainController" hgap="10" vgap="10">
+<GridPane xmlns:fx="http://javafx.com/fxml/1"  hgap="10" vgap="10">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
