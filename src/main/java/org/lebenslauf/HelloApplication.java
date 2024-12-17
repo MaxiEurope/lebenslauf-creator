@@ -6,8 +6,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.backend.DBConnect;
 
-import java.io.IOException;
-
 public class HelloApplication extends Application {
 
     private static Stage primaryStage;
@@ -20,11 +18,11 @@ public class HelloApplication extends Application {
         dbConnect.connect();
 
 
-        loadScene("/login/LoginRegister.fxml", dbConnect);
+        loadScene("/org/lebenslauf/fxml/auth_layout.fxml", dbConnect);
 
         stage.setTitle("Login/Register");
 
-        /*FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("LoginRegister.fxml"));
+        /*FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("auth_layout.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
         stage.setTitle("Lebenslauf GUI");
         stage.setScene(scene);*/
@@ -34,12 +32,11 @@ public class HelloApplication extends Application {
     public static void loadScene(String fxmlFile, DBConnect dbConnect) throws Exception {
         FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource(fxmlFile));
 
-        if(fxmlFile.contains("LoginRegister")){
+        if(fxmlFile.contains("auth_layout")){
             // Set the controller with the DBConnect instance
             LoginRegisterController controller = new LoginRegisterController(dbConnect);
             loader.setController(controller);
-        }
-        else if(fxmlFile.contains("layout")){
+        } else if(fxmlFile.contains("main_layout")){
             MainController controller = new MainController(dbConnect);
             loader.setController(controller);
         }

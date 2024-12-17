@@ -4,10 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import org.backend.DBConnect;
+import org.backend.User;
+import org.backend.util.PasswordUtils;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class LoginRegisterController {
 
@@ -33,15 +34,22 @@ public class LoginRegisterController {
 
         try {
             // Validate user login
-            if (validateUser(email, hashPassword(password))) {
-                loginMessage.setText("Login successful!");
-                loginMessage.setTextFill(Color.GREEN);
-                switchToLayout();
+            Optional<User> userOptional = dbConnect.getUserByEmail(email);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                if (PasswordUtils.checkPassword(password, user.getPassword())) {
+                    loginMessage.setText("Login successful!");
+                    loginMessage.setTextFill(Color.GREEN);
+                    switchToLayout();
+                } else {
+                    loginMessage.setText("Invalid email or password.");
+                    loginMessage.setTextFill(Color.RED);
+                }
             } else {
                 loginMessage.setText("Invalid email or password.");
                 loginMessage.setTextFill(Color.RED);
             }
-        } catch (SQLException | NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             loginMessage.setText("Error: " + e.getMessage());
             loginMessage.setTextFill(Color.RED);
         }
@@ -56,16 +64,18 @@ public class LoginRegisterController {
 
         try {
             // Check if email exists
-            if (checkEmailExists(email)) {
+            Optional<User> userOpt = dbConnect.getUserByEmail(email);
+            if (userOpt.isPresent()) {
                 registerMessage.setText("Email already exists. Please login.");
                 registerMessage.setTextFill(Color.RED);
             } else {
-                // Hash the password and register the user
-                dbConnect.addUser(fullName, email, hashPassword(password));
+                String hashedPassword = PasswordUtils.hashPassword(password);
+                User newUser = new User(fullName, email, hashedPassword);
+                dbConnect.addUser(newUser);
                 registerMessage.setText("Registration successful! Please login.");
                 registerMessage.setTextFill(Color.GREEN);
             }
-        } catch (SQLException | NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             registerMessage.setText("Error: " + e.getMessage());
             registerMessage.setTextFill(Color.RED);
         }
@@ -74,32 +84,10 @@ public class LoginRegisterController {
     @FXML
     private void switchToLayout() {
         try {
-            HelloApplication.loadScene("layout.fxml",dbConnect);
+            HelloApplication.loadScene("fxml/main_layout.fxml",dbConnect);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private boolean validateUser(String email, String hashedPassword) throws SQLException {
-        return dbConnect.getAllUsers().stream()
-                .anyMatch(user -> user.getEmail().equals(email) && user.getPassword().equals(hashedPassword));
-    }
-
-    private boolean checkEmailExists(String email) throws SQLException {
-        return dbConnect.getAllUsers().stream()
-                .anyMatch(user -> user.getEmail().equals(email));
-    }
-
-    private String hashPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] hash = md.digest(password.getBytes());
-        StringBuilder hexString = new StringBuilder();
-
-        for (byte b : hash) {
-            hexString.append(String.format("%02x", b));
-        }
-
-        return hexString.toString();
     }
 }
 
