@@ -5,6 +5,6 @@ module org.example.lebenslaufcreator {
     requires java.sql;
 
 
-    opens org.lebenslauf to javafx.fxml;
-    exports org.lebenslauf;
+    opens org.lebenslauf.ui to javafx.fxml;
+    exports org.lebenslauf.app;
 }

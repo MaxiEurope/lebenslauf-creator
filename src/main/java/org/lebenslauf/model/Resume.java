@@ -1,4 +1,4 @@
-package org.lebenslauf;
+package org.lebenslauf.model;
 
 import java.util.List;
 
@@ -84,9 +84,13 @@ public class Resume {
         this.postalCode = postalCode;
     }
 
-    public String getNationality(){ return nationality; }
+    public String getNationality() {
+        return nationality;
+    }
 
-    public void setNationality(String nationality) {this.nationality = nationality; }
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
