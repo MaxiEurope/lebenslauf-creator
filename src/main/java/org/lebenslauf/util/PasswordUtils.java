@@ -1,4 +1,4 @@
-package org.backend.util;
+package org.lebenslauf.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,9 +16,5 @@ public class PasswordUtils {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static boolean checkPassword(String rawPassword, String hashedPassword) {
-        return hashPassword(rawPassword).equals(hashedPassword);
     }
 }

@@ -1,4 +1,4 @@
-package org.backend;
+package org.lebenslauf.model;
 
 public class User {
     private int id;
@@ -13,17 +13,13 @@ public class User {
         this.password = password;
     }
 
-    public User(String fullName, String email, String password) {
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-    }
-
     // Getters and setters
     public int getId() {
         return id;
     }
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFullName() {
         return fullName;
