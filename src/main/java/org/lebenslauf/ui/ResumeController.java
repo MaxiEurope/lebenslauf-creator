@@ -64,12 +64,25 @@ public class ResumeController {
                 byte[] bytes = fis.readAllBytes();
                 fis.close();
 
-                imageBase64 = Base64.getEncoder().encodeToString(bytes);
+                String fileName = selectedFile.getName().toLowerCase();
+                String mimeType;
+                if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+                    mimeType = "image/jpeg";
+                } else if (fileName.endsWith(".png")) {
+                    mimeType = "image/png";
+                } else {
+                    throw new IllegalArgumentException("Unsupported file type");
+                }
+
+                imageBase64 = "data:" + mimeType + ";base64," + Base64.getEncoder().encodeToString(bytes);
 
                 System.out.println("Image Base64 String: " + imageBase64); // debug
             } catch (IOException e) {
                 e.printStackTrace();
                 imagePathLabel.setText("Error reading file");
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                imagePathLabel.setText("Unsupported file type");
             }
         } else {
             imagePathLabel.setText("No file selected");
