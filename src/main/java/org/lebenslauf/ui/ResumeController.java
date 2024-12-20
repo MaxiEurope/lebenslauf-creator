@@ -4,6 +4,7 @@ import org.lebenslauf.model.User;
 import org.lebenslauf.model.Resume;
 import org.lebenslauf.service.UserService;
 import org.lebenslauf.service.ResumeService;
+import org.lebenslauf.service.PdfApiService;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,6 +13,7 @@ import javafx.stage.Window;
 import javafx.concurrent.Task;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,6 +35,7 @@ public class ResumeController {
     private String imageBase64;
     private final UserService userService;
     private final ResumeService resumeService;
+    private final PdfApiService pdfApiService = new PdfApiService();
     private final User loggedInUser;
 
     public ResumeController(UserService userService, ResumeService resumeService, User loggedInUser) {
@@ -125,6 +128,7 @@ public class ResumeController {
 
         saveResumeTask.setOnSucceeded(e -> {
             confirmationLabel.setText("Resume saved successfully!");
+            generatePdfFromResume(resume);
         });
 
         saveResumeTask.setOnFailed(e -> {
@@ -132,5 +136,33 @@ public class ResumeController {
         });
 
         new Thread(saveResumeTask).start();
+    }
+
+    private void generatePdfFromResume(Resume resume) {
+        Task<byte[]> pdfTask = new Task<>() {
+            @Override
+            protected byte[] call() throws Exception {
+                return pdfApiService.generatePdfFromResume(resume);
+            }
+        };
+
+        pdfTask.setOnSucceeded(e -> {
+            byte[] pdfContent = pdfTask.getValue();
+
+            String outputFileName = "resume_" + resume.getFirstName() + "_" + resume.getLastName() + ".pdf";
+
+            try(FileOutputStream fos = new FileOutputStream(outputFileName)) {
+                fos.write(pdfContent);
+                confirmationLabel.setText("PDF generated and saved as " + outputFileName);
+            } catch (IOException ex) {
+                confirmationLabel.setText("Error writing PDF file: " + ex.getMessage());
+            }
+        });
+
+        pdfTask.setOnFailed(e -> {
+            confirmationLabel.setText("Error generating PDF: " + pdfTask.getException().getMessage());
+        });
+
+        new Thread(pdfTask).start();
     }
 }
