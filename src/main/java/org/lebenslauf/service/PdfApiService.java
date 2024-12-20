@@ -10,6 +10,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -23,7 +25,7 @@ public class PdfApiService {
         }
     }
 
-    public byte[] generatePdfFromResume(Resume resume) throws IOException {
+    public byte[] generatePdfFromResume(Resume resume) throws IOException, URISyntaxException {
         String markdownContent = buildMarkdown(resume);
 
         StringBuilder jsonPayload = new StringBuilder();
@@ -83,12 +85,13 @@ public class PdfApiService {
         }
     }
 
-    private HttpURLConnection getHttpURLConnection(StringBuilder jsonPayload) throws IOException {
+    private HttpURLConnection getHttpURLConnection(StringBuilder jsonPayload) throws IOException, URISyntaxException {
         String payloadString = jsonPayload.toString();
         System.out.println("Payload: " + payloadString);
 
         String apiUrl = "https://api.maxi-script.com/pdf";
-        URL url = new URL(apiUrl);
+        URI uri = new URI(apiUrl);
+        URL url = uri.toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setDoOutput(true);
