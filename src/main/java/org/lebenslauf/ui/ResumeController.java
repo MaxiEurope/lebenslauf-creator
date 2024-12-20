@@ -94,24 +94,7 @@ public class ResumeController {
 
     @FXML
     private void handleSubmit() {
-        Resume resume = new Resume();
-        resume.setFirstName(firstNameField.getText());
-        resume.setLastName(lastNameField.getText());
-        resume.setGender(genderComboBox.getValue());
-        resume.setBirthPlace(birthPlaceField.getText());
-        LocalDate date = birthDateField.getValue();
-        resume.setBirthDate(date != null ? date.toString() : "");
-        resume.setCity(cityField.getText());
-        resume.setAddress(addressField.getText());
-        resume.setPostalCode(postalCodeField.getText());
-        resume.setNationality(nationalityComboBox.getValue());
-        resume.setPhoneNumber(phoneNumberField.getText());
-        resume.setEmail(emailField.getText());
-        List<String> expList = Arrays.asList(experienceField.getText().split("\\n"));
-        resume.setExperience(expList);
-        List<String> eduList = Arrays.asList(educationField.getText().split("\\n"));
-        resume.setEducation(eduList);
-        resume.setImageBase64(imageBase64);
+        Resume resume = getResume();
 
         System.out.println("Resume Data: " + resume.toString()); // debug
 
@@ -136,6 +119,28 @@ public class ResumeController {
         });
 
         new Thread(saveResumeTask).start();
+    }
+
+    private Resume getResume() {
+        Resume resume = new Resume();
+        resume.setFirstName(firstNameField.getText());
+        resume.setLastName(lastNameField.getText());
+        resume.setGender(genderComboBox.getValue());
+        resume.setBirthPlace(birthPlaceField.getText());
+        LocalDate date = birthDateField.getValue();
+        resume.setBirthDate(date != null ? date.toString() : "");
+        resume.setCity(cityField.getText());
+        resume.setAddress(addressField.getText());
+        resume.setPostalCode(postalCodeField.getText());
+        resume.setNationality(nationalityComboBox.getValue());
+        resume.setPhoneNumber(phoneNumberField.getText());
+        resume.setEmail(emailField.getText());
+        List<String> expList = Arrays.asList(experienceField.getText().split("\\n"));
+        resume.setExperience(expList);
+        List<String> eduList = Arrays.asList(educationField.getText().split("\\n"));
+        resume.setEducation(eduList);
+        resume.setImageBase64(imageBase64);
+        return resume;
     }
 
     private void generatePdfFromResume(Resume resume) {
