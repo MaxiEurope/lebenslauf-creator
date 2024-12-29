@@ -2,6 +2,7 @@ package org.lebenslauf.service;
 
 import org.lebenslauf.model.Resume;
 import org.lebenslauf.util.EnvUtils;
+import org.lebenslauf.util.DialogUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,11 @@ public class PdfApiService {
     public PdfApiService() {
         this.apiKey = EnvUtils.getEnv("PDF_API_KEY");
         if (this.apiKey == null || this.apiKey.isEmpty()) {
+            DialogUtils.showErrorDialog(
+                "PDF_API_KEY is missing or empty in the environment variables.",
+                "API Key Error"
+            );
+
             throw new RuntimeException("API key not found");
         }
     }

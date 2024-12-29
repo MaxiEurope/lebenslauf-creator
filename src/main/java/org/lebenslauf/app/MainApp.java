@@ -17,12 +17,13 @@ public class MainApp extends Application {
     private static Stage primaryStage;
     private static UserService userService;
     private static ResumeService resumeService;
+    private static DBConnection dbConnection;
 
     @Override
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
 
-        DBConnection dbConnection = new DBConnection();
+        dbConnection = new DBConnection();
         dbConnection.connect();
 
         userService = new UserService(dbConnection);
@@ -47,6 +48,13 @@ public class MainApp extends Application {
         Scene scene = new Scene(loader.load(), 600, 600);
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
+    }
+
+    @Override
+    public void stop() {
+        if (dbConnection != null) {
+            dbConnection.disconnect();
+        }
     }
 
     public static void main(String[] args) {

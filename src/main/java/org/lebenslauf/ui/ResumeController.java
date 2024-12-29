@@ -5,6 +5,7 @@ import org.lebenslauf.model.Resume;
 import org.lebenslauf.service.UserService;
 import org.lebenslauf.service.ResumeService;
 import org.lebenslauf.service.PdfApiService;
+import org.lebenslauf.util.DialogUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -31,6 +32,8 @@ public class ResumeController {
     private TextArea experienceField, educationField;
     @FXML
     private Label imagePathLabel, confirmationLabel;
+    @FXML
+    private Button submitButton;
 
     private String imageBase64;
     private final UserService userService;
@@ -83,9 +86,11 @@ public class ResumeController {
             } catch (IOException e) {
                 e.printStackTrace();
                 imagePathLabel.setText("Error reading file");
+                DialogUtils.showErrorDialog("Unable to read image file.\n" + e.getMessage(), "File I/O Error");
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 imagePathLabel.setText("Unsupported file type");
+                DialogUtils.showErrorDialog(e.getMessage(), "Image Upload Error");
             }
         } else {
             imagePathLabel.setText("No file selected");
@@ -94,11 +99,26 @@ public class ResumeController {
 
     @FXML
     private void handleSubmit() {
+        if (firstNameField.getText() == null || firstNameField.getText().trim().isEmpty()) {
+            DialogUtils.showErrorDialog("First name is required.", "Validation Error");
+            return;
+        }
+        if (lastNameField.getText() == null || lastNameField.getText().trim().isEmpty()) {
+            DialogUtils.showErrorDialog("Last name is required.", "Validation Error");
+            return;
+        }
+        if (emailField.getText() == null || !emailField.getText().contains("@")) {
+            DialogUtils.showErrorDialog("Please enter a valid email address.", "Validation Error");
+            return;
+        }
+
         Resume resume = getResume();
 
         System.out.println("Resume Data: " + resume.toString()); // debug
 
         int loggedInUserId = loggedInUser.getId();
+
+        submitButton.setDisable(true);
 
         Task<Void> saveResumeTask = new Task<>() {
             @Override
@@ -115,7 +135,14 @@ public class ResumeController {
         });
 
         saveResumeTask.setOnFailed(e -> {
-            confirmationLabel.setText("Error saving resume: " + saveResumeTask.getException().getMessage());
+            Throwable ex = saveResumeTask.getException();
+            ex.printStackTrace();
+            confirmationLabel.setText("Error saving resume: " + ex.getMessage());
+            DialogUtils.showErrorDialog(
+                "Error saving resume:\n" + ex.getMessage(),
+                "Resume Saving Error"
+            );
+            submitButton.setDisable(false);
         });
 
         new Thread(saveResumeTask).start();
@@ -125,20 +152,22 @@ public class ResumeController {
         Resume resume = new Resume();
         resume.setFirstName(firstNameField.getText());
         resume.setLastName(lastNameField.getText());
-        resume.setGender(genderComboBox.getValue());
+        resume.setGender(genderComboBox.getValue() != null ? genderComboBox.getValue() : "N/A");
         resume.setBirthPlace(birthPlaceField.getText());
         LocalDate date = birthDateField.getValue();
         resume.setBirthDate(date != null ? date.toString() : "");
         resume.setCity(cityField.getText());
         resume.setAddress(addressField.getText());
         resume.setPostalCode(postalCodeField.getText());
-        resume.setNationality(nationalityComboBox.getValue());
+        resume.setNationality(nationalityComboBox.getValue() != null ? nationalityComboBox.getValue() : "N/A");
         resume.setPhoneNumber(phoneNumberField.getText());
         resume.setEmail(emailField.getText());
+
         List<String> expList = Arrays.asList(experienceField.getText().split("\\n"));
         resume.setExperience(expList);
         List<String> eduList = Arrays.asList(educationField.getText().split("\\n"));
         resume.setEducation(eduList);
+
         resume.setImageBase64(imageBase64);
         return resume;
     }
@@ -160,12 +189,26 @@ public class ResumeController {
                 fos.write(pdfContent);
                 confirmationLabel.setText("PDF generated and saved as " + outputFileName);
             } catch (IOException ex) {
+                ex.printStackTrace();
                 confirmationLabel.setText("Error writing PDF file: " + ex.getMessage());
+                DialogUtils.showErrorDialog(
+                    "Error writing PDF file:\n" + ex.getMessage(),
+                    "File I/O Error"
+                );
+            } finally {
+                submitButton.setDisable(false);
             }
         });
 
         pdfTask.setOnFailed(e -> {
-            confirmationLabel.setText("Error generating PDF: " + pdfTask.getException().getMessage());
+            Throwable ex = pdfTask.getException();
+            ex.printStackTrace();
+            confirmationLabel.setText("Error generating PDF: " + ex.getMessage());
+            DialogUtils.showErrorDialog(
+                "Error generating PDF:\n" + ex.getMessage(),
+                "PDF Generation Error"
+            );
+            submitButton.setDisable(false);
         });
 
         new Thread(pdfTask).start();

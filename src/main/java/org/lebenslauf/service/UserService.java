@@ -21,7 +21,6 @@ public class UserService {
         return userManager.emailExists(email);
     }
 
-    // TODO: validate email (darko?)
     public Optional<User> validateCredentials(String email, String hashedPassword) {
         Optional<User> userOpt = userManager.getUserByEmail(email);
         if (userOpt.isPresent()) {

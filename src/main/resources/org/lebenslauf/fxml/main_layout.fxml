@@ -57,7 +57,7 @@
     <Button text="Select Image" onAction="#handleImageUpload" GridPane.rowIndex="13" GridPane.columnIndex="0"/>
     <Label fx:id="imagePathLabel" GridPane.rowIndex="13" GridPane.columnIndex="1"/>
 
-    <Button text="Submit" onAction="#handleSubmit" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
+    <Button fx:id="submitButton" text="Submit" onAction="#handleSubmit" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
 
     <Label fx:id="confirmationLabel" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
 </GridPane>

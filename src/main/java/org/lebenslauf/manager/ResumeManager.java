@@ -1,6 +1,7 @@
 package org.lebenslauf.manager;
 
 import org.lebenslauf.model.Resume;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -73,8 +74,10 @@ public class ResumeManager {
                 resume.setNationality(rs.getString("nationality"));
                 resume.setPhoneNumber(rs.getString("phone_number"));
                 resume.setEmail(rs.getString("email"));
-                resume.setExperience(List.of(rs.getString("experience").split("\\n")));
-                resume.setEducation(List.of(rs.getString("education").split("\\n")));
+                String exp = rs.getString("experience") == null ? "" : rs.getString("experience");
+                String edu = rs.getString("education") == null ? "" : rs.getString("education");
+                resume.setExperience(List.of(exp.split("\\n")));
+                resume.setEducation(List.of(edu.split("\\n")));
                 resume.setImageBase64(rs.getString("image_base64"));
                 resumes.add(resume);
             }
