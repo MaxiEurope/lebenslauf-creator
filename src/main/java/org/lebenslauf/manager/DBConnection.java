@@ -15,6 +15,24 @@ public class DBConnection {
     // Connection object
     private Connection conn = null;
 
+    public DBConnection() {
+        if (USER == null || USER.isEmpty()) {
+            DialogUtils.showErrorDialog(
+                "Environment variable 'DB_USER' is missing or empty. Please set it in the environment.",
+                "Configuration Error"
+            );
+            throw new IllegalArgumentException("Environment variable 'DB_USER' is missing or empty.");
+        }
+
+        if (PASS == null) { // || PASS.isEmpty()
+            DialogUtils.showErrorDialog(
+                "Environment variable 'DB_PASS' is missing or empty. Please set it in the environment.",
+                "Configuration Error"
+            );
+            throw new IllegalArgumentException("Environment variable 'DB_PASS' is missing or empty.");
+        }
+    }
+
     // Method to establish the connection
     public boolean connect() {
         try {
@@ -42,8 +60,8 @@ public class DBConnection {
         } catch (SQLException se) {
             se.printStackTrace();
             DialogUtils.showErrorDialog(
-                    "Error disconnecting from database:\n" + se.getMessage(),
-                    "Database Disconnect Error"
+                "Error disconnecting from database:\n" + se.getMessage(),
+                "Database Disconnect Error"
             );
         }
     }
