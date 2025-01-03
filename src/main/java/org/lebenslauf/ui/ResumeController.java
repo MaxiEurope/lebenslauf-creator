@@ -19,9 +19,6 @@ import javafx.util.Duration;
 import javafx.beans.value.ChangeListener;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
@@ -53,8 +50,6 @@ public class ResumeController {
 
     private final AtomicBoolean resumeChanged = new AtomicBoolean(false);
 
-    private Path tempPreviewFile;
-
     public ResumeController(UserService userService, ResumeService resumeService, User loggedInUser) {
         this.userService = userService;
         this.resumeService = resumeService;
@@ -64,14 +59,6 @@ public class ResumeController {
     @FXML private void initialize() {
         genderComboBox.getItems().addAll("Männlich", "Weiblich", "Divers");
         nationalityComboBox.getItems().addAll("Deutsch", "Österreichisch", "Schweizerisch", "Andere");
-
-        try {
-            Path tempDir = Files.createTempDirectory("cv_preview");
-            tempPreviewFile = tempDir.resolve("preview.html");
-            System.out.println("Preview file: " + tempPreviewFile.toAbsolutePath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
         setupListeners();
 
@@ -274,7 +261,7 @@ public class ResumeController {
 
         Task<String> previewTask = new Task<>() {
             @Override
-            protected String call() throws IOException, URISyntaxException {
+            protected String call() throws Exception {
                 return pdfApiService.generateHtmlFromResume(resume);
             }
         };
@@ -282,14 +269,7 @@ public class ResumeController {
         previewTask.setOnSucceeded(event -> {
             String htmlContent = previewTask.getValue();
 
-            if (tempPreviewFile != null) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempPreviewFile.toFile(), false))) {
-                    writer.write(htmlContent);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                pdfPreviewWebView.getEngine().load(tempPreviewFile.toUri().toString());
-            }
+            pdfPreviewWebView.getEngine().loadContent(htmlContent, "text/html");
 
             resumeChanged.set(false);
         });
@@ -298,8 +278,8 @@ public class ResumeController {
             Throwable ex = previewTask.getException();
             ex.printStackTrace();
             DialogUtils.showErrorDialog(
-                    "Error generating HTML preview:\n" + ex.getMessage(),
-                    "Preview Error"
+                "Error generating HTML preview:\n" + ex.getMessage(),
+                "Preview Error"
             );
             resumeChanged.set(false);
         });
