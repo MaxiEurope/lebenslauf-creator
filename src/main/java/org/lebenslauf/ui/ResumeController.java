@@ -9,17 +9,24 @@ import org.lebenslauf.util.DialogUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.concurrent.Task;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javafx.util.Duration;
+import javafx.beans.value.ChangeListener;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ResumeController {
     @FXML
@@ -35,11 +42,18 @@ public class ResumeController {
     @FXML
     private Button submitButton;
 
+    @FXML
+    private WebView pdfPreviewWebView;
+
     private String imageBase64;
     private final UserService userService;
     private final ResumeService resumeService;
     private final PdfApiService pdfApiService = new PdfApiService();
     private final User loggedInUser;
+
+    private final AtomicBoolean resumeChanged = new AtomicBoolean(false);
+
+    private Path tempPreviewFile;
 
     public ResumeController(UserService userService, ResumeService resumeService, User loggedInUser) {
         this.userService = userService;
@@ -50,6 +64,45 @@ public class ResumeController {
     @FXML private void initialize() {
         genderComboBox.getItems().addAll("Männlich", "Weiblich", "Divers");
         nationalityComboBox.getItems().addAll("Deutsch", "Österreichisch", "Schweizerisch", "Andere");
+
+        try {
+            Path tempDir = Files.createTempDirectory("cv_preview");
+            tempPreviewFile = tempDir.resolve("preview.html");
+            System.out.println("Preview file: " + tempPreviewFile.toAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        setupListeners();
+
+        Timeline timeline = new Timeline(
+            new KeyFrame(Duration.seconds(5), event -> {
+                if (resumeChanged.get()) {
+                    updatePreview();
+                }
+            })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private void setupListeners() {
+        ChangeListener<String> textChangeListener = (observable, oldValue, newValue) -> resumeChanged.set(true);
+
+        firstNameField.textProperty().addListener(textChangeListener);
+        lastNameField.textProperty().addListener(textChangeListener);
+        birthPlaceField.textProperty().addListener(textChangeListener);
+        cityField.textProperty().addListener(textChangeListener);
+        addressField.textProperty().addListener(textChangeListener);
+        postalCodeField.textProperty().addListener(textChangeListener);
+        phoneNumberField.textProperty().addListener(textChangeListener);
+        emailField.textProperty().addListener(textChangeListener);
+        experienceField.textProperty().addListener(textChangeListener);
+        educationField.textProperty().addListener(textChangeListener);
+
+        genderComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        nationalityComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        birthDateField.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
     }
 
     @FXML
@@ -83,6 +136,8 @@ public class ResumeController {
                 imageBase64 = "data:" + mimeType + ";base64," + Base64.getEncoder().encodeToString(bytes);
 
                 System.out.println("Image Base64 String: " + imageBase64); // debug
+
+                resumeChanged.set(true);
             } catch (IOException e) {
                 e.printStackTrace();
                 imagePathLabel.setText("Error reading file");
@@ -212,5 +267,43 @@ public class ResumeController {
         });
 
         new Thread(pdfTask).start();
+    }
+
+    private void updatePreview() {
+        Resume resume = getResume();
+
+        Task<String> previewTask = new Task<>() {
+            @Override
+            protected String call() throws IOException, URISyntaxException {
+                return pdfApiService.generateHtmlFromResume(resume);
+            }
+        };
+
+        previewTask.setOnSucceeded(event -> {
+            String htmlContent = previewTask.getValue();
+
+            if (tempPreviewFile != null) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempPreviewFile.toFile(), false))) {
+                    writer.write(htmlContent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                pdfPreviewWebView.getEngine().load(tempPreviewFile.toUri().toString());
+            }
+
+            resumeChanged.set(false);
+        });
+
+        previewTask.setOnFailed(event -> {
+            Throwable ex = previewTask.getException();
+            ex.printStackTrace();
+            DialogUtils.showErrorDialog(
+                    "Error generating HTML preview:\n" + ex.getMessage(),
+                    "Preview Error"
+            );
+            resumeChanged.set(false);
+        });
+
+        new Thread(previewTask).start();
     }
 }

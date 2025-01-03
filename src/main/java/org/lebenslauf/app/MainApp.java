@@ -30,6 +30,10 @@ public class MainApp extends Application {
         resumeService = new ResumeService(dbConnection);
 
         loadScene("auth_layout.fxml", "Login/Register", null);
+
+        stage.setMinWidth(800);
+        stage.setMinHeight(600);
+
         stage.show();
     }
 
@@ -45,7 +49,12 @@ public class MainApp extends Application {
             loader.setController(controller);
         }
 
-        Scene scene = new Scene(loader.load(), 600, 600);
+        Scene scene;
+        if (fxmlFile.contains("main_layout")) {
+            scene = new Scene(loader.load(), 1000, 700);
+        } else {
+            scene = new Scene(loader.load(), 600, 600);
+        }
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
     }

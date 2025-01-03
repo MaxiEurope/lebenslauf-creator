@@ -4,16 +4,8 @@ import org.lebenslauf.model.Resume;
 import org.lebenslauf.util.EnvUtils;
 import org.lebenslauf.util.DialogUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 
 public class PdfApiService {
@@ -32,13 +24,91 @@ public class PdfApiService {
     }
 
     public byte[] generatePdfFromResume(Resume resume) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume);
+
+        HttpURLConnection connection = openApiConnection(jsonPayload, false);
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try (InputStream responseStream = connection.getInputStream(); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = responseStream.read(buffer)) != -1) {
+                    baos.write(buffer, 0, bytesRead);
+                }
+                return baos.toByteArray();
+            }
+        } else {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line.trim());
+                }
+                throw new IOException("Error from API (PDF): " + response);
+            }
+        }
+    }
+
+    public String generateHtmlFromResume(Resume resume) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume);
+
+        HttpURLConnection connection = openApiConnection(jsonPayload, true);
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line).append("\n");
+                }
+                return response.toString();
+            }
+        } else {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line.trim());
+                }
+                throw new IOException("Error from API (HTML): " + response);
+            }
+        }
+    }
+
+    private HttpURLConnection openApiConnection(String jsonPayload, boolean requestHtml) throws IOException, URISyntaxException {
+        String apiUrl = "https://api.maxi-script.com/pdf";
+        URI uri = new URI(apiUrl);
+        URL url = uri.toURL();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        if (requestHtml) {
+            connection.setRequestProperty("Accept", "text/html");
+        } else {
+            connection.setRequestProperty("Accept", "application/pdf");
+        }
+        connection.setRequestProperty("X-API-KEY", apiKey);
+
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = jsonPayload.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+        return connection;
+    }
+
+    private String buildJsonPayload(Resume resume) {
         String markdownContent = buildMarkdown(resume);
 
         StringBuilder jsonPayload = new StringBuilder();
         jsonPayload.append("{");
         jsonPayload.append("\"markdown\":\"")
-                .append(markdownContent.replace("\"", "\\\"").replace("\n", "\\n"))
-                .append("\",");
+            .append(markdownContent.replace("\"", "\\\"").replace("\n", "\\n"))
+            .append("\",");
 
         jsonPayload.append("\"images\":[");
         if (resume.getImageBase64() != null && !resume.getImageBase64().isEmpty()) {
@@ -67,54 +137,11 @@ public class PdfApiService {
         }
         jsonPayload.append("]}");
 
-        HttpURLConnection connection = getHttpURLConnection(jsonPayload);
-
-        int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            try (InputStream responseStream = connection.getInputStream(); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = responseStream.read(buffer)) != -1) {
-                    baos.write(buffer, 0, bytesRead);
-                }
-                return baos.toByteArray();
-            }
-        } else {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = reader.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                throw new IOException("Error from API: " + response);
-            }
-        }
-    }
-
-    private HttpURLConnection getHttpURLConnection(StringBuilder jsonPayload) throws IOException, URISyntaxException {
-        String payloadString = jsonPayload.toString();
-        System.out.println("Payload: " + payloadString);
-
-        String apiUrl = "https://api.maxi-script.com/pdf";
-        URI uri = new URI(apiUrl);
-        URL url = uri.toURL();
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Accept", "application/pdf");
-        connection.setRequestProperty("X-API-KEY", apiKey);
-
-        try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = payloadString.getBytes(StandardCharsets.UTF_8);
-            os.write(input, 0, input.length);
-        }
-        return connection;
+        return jsonPayload.toString();
     }
 
     private String buildMarkdown(Resume resume) {
-        return "# Generated Resume\n\n" +
+        return "# Resume\n\n" +
                 "## Personal Information\n" +
                 "**Name:** " + resume.getFirstName() + " " + resume.getLastName() + "\n\n" +
                 "**Gender:** " + resume.getGender() + "\n\n" +
