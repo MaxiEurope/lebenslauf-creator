@@ -11,7 +11,9 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+
 import java.util.Optional;
 
 public class AuthController {
@@ -35,6 +37,21 @@ public class AuthController {
     public AuthController(UserService userService, ResumeService resumeService) {
         this.userService = userService;
         this.resumeService = resumeService;
+    }
+
+    @FXML
+    private void initialize() {
+        loginPasswordField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleLogin();
+            }
+        });
+
+        registerPasswordField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleRegister();
+            }
+        });
     }
 
     @FXML
