@@ -156,8 +156,6 @@ public class PdfApiService {
                 "## Experience\n" +
                 (resume.getExperience() != null ? String.join("\n- ", resume.getExperience()) : "") + "\n\n" +
                 "## Education\n" +
-                (resume.getEducation() != null ? String.join("\n- ", resume.getEducation()) : "") + "\n\n" +
-                "---\n\n" +
-                "![Profile](profile.png \"pfp\")";
+                (resume.getEducation() != null ? String.join("\n- ", resume.getEducation()) : "");
     }
 }

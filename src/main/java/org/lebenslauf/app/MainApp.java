@@ -24,7 +24,10 @@ public class MainApp extends Application {
         primaryStage = stage;
 
         dbConnection = new DBConnection();
-        dbConnection.connect();
+        boolean success = dbConnection.connect();
+        if (!success) {
+            System.exit(1);
+        }
 
         userService = new UserService(dbConnection);
         resumeService = new ResumeService(dbConnection);
