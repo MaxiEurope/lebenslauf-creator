@@ -43,3 +43,7 @@ build/
 
 ### Output ###
 *.pdf
+
+### Logs ###
+*.log
+*.lck

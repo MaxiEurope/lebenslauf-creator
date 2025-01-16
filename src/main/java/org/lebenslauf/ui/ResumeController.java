@@ -6,6 +6,7 @@ import org.lebenslauf.service.UserService;
 import org.lebenslauf.service.ResumeService;
 import org.lebenslauf.service.PdfApiService;
 import org.lebenslauf.util.DialogUtils;
+import org.lebenslauf.util.LogUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -105,10 +106,8 @@ public class ResumeController {
 
         if (selectedFile != null) {
             imagePathLabel.setText(selectedFile.getAbsolutePath());
-            try {
-                FileInputStream fis = new FileInputStream(selectedFile);
+            try (FileInputStream fis = new FileInputStream(selectedFile)) {
                 byte[] bytes = fis.readAllBytes();
-                fis.close();
 
                 String fileName = selectedFile.getName().toLowerCase();
                 String mimeType;
@@ -122,15 +121,15 @@ public class ResumeController {
 
                 imageBase64 = "data:" + mimeType + ";base64," + Base64.getEncoder().encodeToString(bytes);
 
-                System.out.println("Image Base64 String: " + imageBase64); // debug
+                LogUtils.logInfo("Image Base64 str: " + imageBase64); // debug
 
                 resumeChanged.set(true);
             } catch (IOException e) {
-                e.printStackTrace();
+                LogUtils.logError(e, "Error reading image file");
                 imagePathLabel.setText("Error reading file");
                 DialogUtils.showErrorDialog("Unable to read image file.\n" + e.getMessage(), "File I/O Error");
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                LogUtils.logError(e, "Unsupported file type");
                 imagePathLabel.setText("Unsupported file type");
                 DialogUtils.showErrorDialog(e.getMessage(), "Image Upload Error");
             }
@@ -156,7 +155,7 @@ public class ResumeController {
 
         Resume resume = getResume();
 
-        System.out.println("Resume Data: " + resume.toString()); // debug
+        LogUtils.logInfo("Resume Data: " + resume.toString()); // debug
 
         int loggedInUserId = loggedInUser.getId();
 
@@ -178,7 +177,7 @@ public class ResumeController {
 
         saveResumeTask.setOnFailed(e -> {
             Throwable ex = saveResumeTask.getException();
-            ex.printStackTrace();
+            LogUtils.logError(ex, "Error saving resume");
             confirmationLabel.setText("Error saving resume: " + ex.getMessage());
             DialogUtils.showErrorDialog(
                 "Error saving resume:\n" + ex.getMessage(),
@@ -231,7 +230,7 @@ public class ResumeController {
                 fos.write(pdfContent);
                 confirmationLabel.setText("PDF generated and saved as " + outputFileName);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                LogUtils.logError(ex, "Error writing PDF file");
                 confirmationLabel.setText("Error writing PDF file: " + ex.getMessage());
                 DialogUtils.showErrorDialog(
                     "Error writing PDF file:\n" + ex.getMessage(),
@@ -244,7 +243,7 @@ public class ResumeController {
 
         pdfTask.setOnFailed(e -> {
             Throwable ex = pdfTask.getException();
-            ex.printStackTrace();
+            LogUtils.logError(ex, "Error generating PDF");
             confirmationLabel.setText("Error generating PDF: " + ex.getMessage());
             DialogUtils.showErrorDialog(
                 "Error generating PDF:\n" + ex.getMessage(),
@@ -276,7 +275,7 @@ public class ResumeController {
 
         previewTask.setOnFailed(event -> {
             Throwable ex = previewTask.getException();
-            ex.printStackTrace();
+            LogUtils.logError(ex, "Error generating HTML preview");
             DialogUtils.showErrorDialog(
                 "Error generating HTML preview:\n" + ex.getMessage(),
                 "Preview Error"

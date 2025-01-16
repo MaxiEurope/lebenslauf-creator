@@ -1,14 +1,14 @@
 package org.lebenslauf.manager;
 
 import org.lebenslauf.model.User;
+import org.lebenslauf.util.LogUtils;
+
 import java.sql.*;
 import java.util.Optional;
 
-public class UserManager {
-    private final DBConnection db;
-
+public class UserManager extends BaseManager {
     public UserManager(DBConnection db) {
-        this.db = db;
+        super(db);
     }
 
     public void addUser(User user) {
@@ -19,7 +19,9 @@ public class UserManager {
             stmt.setString(3, user.getPassword());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error adding user to db: " + user.getEmail();
+            LogUtils.logError(e, errMsg);
+            throw new RuntimeException(errMsg);
         }
     }
 
@@ -30,7 +32,8 @@ public class UserManager {
             ResultSet rs = stmt.executeQuery();
             return rs.next();
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error checking if email exists: " + email;
+            LogUtils.logError(e, errMsg);
             return false;
         }
     }
@@ -49,7 +52,9 @@ public class UserManager {
                 ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error getting user by email: " + email;
+            LogUtils.logError(e, errMsg);
+            throw new RuntimeException(errMsg);
         }
         return Optional.empty();
     }
@@ -63,7 +68,9 @@ public class UserManager {
             stmt.setInt(4, user.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error updating user: " + user.getEmail();
+            LogUtils.logError(e, errMsg);
+            throw new RuntimeException(errMsg);
         }
     }
 
@@ -81,7 +88,9 @@ public class UserManager {
                 ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error getting user by id: " + id;
+            LogUtils.logError(e, errMsg);
+            throw new RuntimeException(errMsg);
         }
         return Optional.empty();
     }

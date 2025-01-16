@@ -35,7 +35,7 @@ public class EnvUtils {
                 envVariables.put(key, value);
             }
         } catch (IOException e) {
-            System.err.println("Error reading environment variables file: " + e.getMessage());
+            LogUtils.logError(e, "Error reading environment variables file: " + e.getMessage());
         }
     }
 

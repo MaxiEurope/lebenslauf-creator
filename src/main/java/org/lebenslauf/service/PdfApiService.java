@@ -3,6 +3,7 @@ package org.lebenslauf.service;
 import org.lebenslauf.model.Resume;
 import org.lebenslauf.util.EnvUtils;
 import org.lebenslauf.util.DialogUtils;
+import org.lebenslauf.util.LogUtils;
 
 import java.io.*;
 import java.net.*;
@@ -45,7 +46,9 @@ public class PdfApiService {
                 while ((line = reader.readLine()) != null) {
                     response.append(line.trim());
                 }
-                throw new IOException("Error from API (PDF): " + response);
+                String errMsg = "Error from API (PDF): " + response;
+                LogUtils.logError(null, errMsg);
+                throw new IOException(errMsg);
             }
         }
     }
@@ -72,7 +75,9 @@ public class PdfApiService {
                 while ((line = reader.readLine()) != null) {
                     response.append(line.trim());
                 }
-                throw new IOException("Error from API (HTML): " + response);
+                String errMsg = "Error from API (HTML): " + response;
+                LogUtils.logError(null, errMsg);
+                throw new IOException(errMsg);
             }
         }
     }
