@@ -24,8 +24,8 @@ public class PdfApiService {
         }
     }
 
-    public byte[] generatePdfFromResume(Resume resume) throws IOException, URISyntaxException {
-        String jsonPayload = buildJsonPayload(resume);
+    public byte[] generatePdfFromResume(Resume resume, String languageCode) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume, languageCode);
 
         HttpURLConnection connection = openApiConnection(jsonPayload, false);
 
@@ -53,8 +53,8 @@ public class PdfApiService {
         }
     }
 
-    public String generateHtmlFromResume(Resume resume) throws IOException, URISyntaxException {
-        String jsonPayload = buildJsonPayload(resume);
+    public String generateHtmlFromResume(Resume resume, String languageCode) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume, languageCode);
 
         HttpURLConnection connection = openApiConnection(jsonPayload, true);
 
@@ -106,11 +106,16 @@ public class PdfApiService {
         return connection;
     }
 
-    private String buildJsonPayload(Resume resume) {
+    private String buildJsonPayload(Resume resume, String languageCode) {
         String markdownContent = buildMarkdown(resume);
 
         StringBuilder jsonPayload = new StringBuilder();
         jsonPayload.append("{");
+
+        if (languageCode != null && !"None".equalsIgnoreCase(languageCode)) {
+            jsonPayload.append("\"lang\":\"").append(languageCode).append("\",");
+        }
+
         jsonPayload.append("\"markdown\":\"")
             .append(markdownContent.replace("\"", "\\\"").replace("\n", "\\n"))
             .append("\",");
@@ -141,7 +146,7 @@ public class PdfApiService {
                 .append("}");
         }
         jsonPayload.append("]}");
-
+        LogUtils.logInfo("JSON Payload: " + jsonPayload.toString());
         return jsonPayload.toString();
     }
 

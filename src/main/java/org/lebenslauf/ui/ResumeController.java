@@ -39,6 +39,8 @@ public class ResumeController {
     private Label imagePathLabel, confirmationLabel;
     @FXML
     private Button submitButton;
+    @FXML
+    private ComboBox<String> translationLanguageComboBox;
 
     @FXML
     private WebView pdfPreviewWebView;
@@ -62,6 +64,8 @@ public class ResumeController {
         nationalityComboBox.getItems().addAll("Deutsch", "Österreichisch", "Schweizerisch", "Andere");
         birthDateField.getEditor().setDisable(true);
         birthDateField.getEditor().setOpacity(1);
+        translationLanguageComboBox.getItems().addAll("None", "DE", "EN");
+        translationLanguageComboBox.setValue("None");
 
         setupListeners();
 
@@ -219,7 +223,8 @@ public class ResumeController {
         Task<byte[]> pdfTask = new Task<>() {
             @Override
             protected byte[] call() throws Exception {
-                return pdfApiService.generatePdfFromResume(resume);
+                String selectedLanguage = translationLanguageComboBox.getValue();
+                return pdfApiService.generatePdfFromResume(resume, selectedLanguage);
             }
         };
 
@@ -263,7 +268,8 @@ public class ResumeController {
         Task<String> previewTask = new Task<>() {
             @Override
             protected String call() throws Exception {
-                return pdfApiService.generateHtmlFromResume(resume);
+                String selectedLanguage = translationLanguageComboBox.getValue();
+                return pdfApiService.generateHtmlFromResume(resume, selectedLanguage);
             }
         };
 
