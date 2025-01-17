@@ -6,6 +6,7 @@ import org.lebenslauf.ui.AuthController;
 import org.lebenslauf.ui.ResumeController;
 import org.lebenslauf.service.UserService;
 import org.lebenslauf.service.ResumeService;
+import org.lebenslauf.util.LogUtils;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +25,11 @@ public class MainApp extends Application {
         primaryStage = stage;
 
         dbConnection = new DBConnection();
-        dbConnection.connect();
+        boolean success = dbConnection.connect();
+        if (!success) {
+            LogUtils.logWarning("Failed to connect to the database. Exiting...");
+            System.exit(1);
+        }
 
         userService = new UserService(dbConnection);
         resumeService = new ResumeService(dbConnection);
@@ -62,7 +67,11 @@ public class MainApp extends Application {
     @Override
     public void stop() {
         if (dbConnection != null) {
-            dbConnection.disconnect();
+            try {
+                dbConnection.disconnect();
+            } catch (Exception e) {
+                LogUtils.logError(e, "Error while disconnecting db using stop()");
+            }
         }
     }
 

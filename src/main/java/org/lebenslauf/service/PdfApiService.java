@@ -3,6 +3,7 @@ package org.lebenslauf.service;
 import org.lebenslauf.model.Resume;
 import org.lebenslauf.util.EnvUtils;
 import org.lebenslauf.util.DialogUtils;
+import org.lebenslauf.util.LogUtils;
 
 import java.io.*;
 import java.net.*;
@@ -23,8 +24,8 @@ public class PdfApiService {
         }
     }
 
-    public byte[] generatePdfFromResume(Resume resume) throws IOException, URISyntaxException {
-        String jsonPayload = buildJsonPayload(resume);
+    public byte[] generatePdfFromResume(Resume resume, String languageCode) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume, languageCode);
 
         HttpURLConnection connection = openApiConnection(jsonPayload, false);
 
@@ -45,13 +46,15 @@ public class PdfApiService {
                 while ((line = reader.readLine()) != null) {
                     response.append(line.trim());
                 }
-                throw new IOException("Error from API (PDF): " + response);
+                String errMsg = "Error from API (PDF): " + response;
+                LogUtils.logError(null, errMsg);
+                throw new IOException(errMsg);
             }
         }
     }
 
-    public String generateHtmlFromResume(Resume resume) throws IOException, URISyntaxException {
-        String jsonPayload = buildJsonPayload(resume);
+    public String generateHtmlFromResume(Resume resume, String languageCode) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume, languageCode);
 
         HttpURLConnection connection = openApiConnection(jsonPayload, true);
 
@@ -72,7 +75,9 @@ public class PdfApiService {
                 while ((line = reader.readLine()) != null) {
                     response.append(line.trim());
                 }
-                throw new IOException("Error from API (HTML): " + response);
+                String errMsg = "Error from API (HTML): " + response;
+                LogUtils.logError(null, errMsg);
+                throw new IOException(errMsg);
             }
         }
     }
@@ -101,11 +106,16 @@ public class PdfApiService {
         return connection;
     }
 
-    private String buildJsonPayload(Resume resume) {
+    private String buildJsonPayload(Resume resume, String languageCode) {
         String markdownContent = buildMarkdown(resume);
 
         StringBuilder jsonPayload = new StringBuilder();
         jsonPayload.append("{");
+
+        if (languageCode != null && !"None".equalsIgnoreCase(languageCode)) {
+            jsonPayload.append("\"lang\":\"").append(languageCode).append("\",");
+        }
+
         jsonPayload.append("\"markdown\":\"")
             .append(markdownContent.replace("\"", "\\\"").replace("\n", "\\n"))
             .append("\",");
@@ -136,7 +146,7 @@ public class PdfApiService {
                 .append("}");
         }
         jsonPayload.append("]}");
-
+        LogUtils.logInfo("JSON Payload: " + jsonPayload.toString());
         return jsonPayload.toString();
     }
 
@@ -156,8 +166,6 @@ public class PdfApiService {
                 "## Experience\n" +
                 (resume.getExperience() != null ? String.join("\n- ", resume.getExperience()) : "") + "\n\n" +
                 "## Education\n" +
-                (resume.getEducation() != null ? String.join("\n- ", resume.getEducation()) : "") + "\n\n" +
-                "---\n\n" +
-                "![Profile](profile.png \"pfp\")";
+                (resume.getEducation() != null ? String.join("\n- ", resume.getEducation()) : "");
     }
 }

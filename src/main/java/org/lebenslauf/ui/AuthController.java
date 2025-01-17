@@ -6,6 +6,7 @@ import org.lebenslauf.service.UserService;
 import org.lebenslauf.service.ResumeService;
 import org.lebenslauf.util.DialogUtils;
 import org.lebenslauf.util.PasswordUtils;
+import org.lebenslauf.util.LogUtils;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -91,7 +92,7 @@ public class AuthController {
 
         loginTask.setOnFailed(e -> {
             Throwable ex = loginTask.getException();
-            ex.printStackTrace();
+            LogUtils.logError(ex, "An unexpected error occurred during login.");
             DialogUtils.showErrorDialog(
                 "An unexpected error occurred during login.\n" + ex.getMessage(),
                 "Login Error"
@@ -146,7 +147,7 @@ public class AuthController {
 
         registerTask.setOnFailed(e -> {
             Throwable ex = registerTask.getException();
-            ex.printStackTrace();
+            LogUtils.logError(ex, "An unexpected error occurred during registration.");
             DialogUtils.showErrorDialog(
                 "An unexpected error occurred during registration.\n" + ex.getMessage(),
                 "Registration Error"
@@ -161,7 +162,7 @@ public class AuthController {
             try {
                 MainApp.loadScene("main_layout.fxml", "Resume Editor", loggedInUser);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LogUtils.logError(ex, "Failed to load main layout.");
                 DialogUtils.showErrorDialog(
                     "Failed to load main layout.\n" + ex.getMessage(),
                     "Scene Loading Error"

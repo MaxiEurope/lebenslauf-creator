@@ -68,8 +68,10 @@
 
     <Button fx:id="submitButton" text="Submit" onAction="#handleSubmit" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
 
-    <Label fx:id="confirmationLabel" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
+    <Label text="Translate to:" GridPane.rowIndex="15" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="translationLanguageComboBox" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
 
+    <Label fx:id="confirmationLabel" GridPane.rowIndex="16" GridPane.columnIndex="1"/>
 
-    <WebView fx:id="pdfPreviewWebView" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="16"/>
+    <WebView fx:id="pdfPreviewWebView" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="17"/>
 </GridPane>

@@ -1,17 +1,21 @@
 package org.lebenslauf.manager;
 
 import org.lebenslauf.model.Resume;
+import org.lebenslauf.util.LogUtils;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResumeManager {
-    private final DBConnection db;
-
+public class ResumeManager extends BaseManager {
     public ResumeManager(DBConnection db) {
-        this.db = db;
+        super(db);
+    }
+
+    @Override
+    public void logManagerInfo() {
+        LogUtils.logInfo("ResumeManager initialized");
     }
 
     public int getMaxVersionNumberForUser(int userId) {
@@ -23,7 +27,9 @@ public class ResumeManager {
                 return rs.getInt("max_version");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error getting max version number for user " + userId;
+            LogUtils.logError(e, errMsg);
+            throw new RuntimeException(errMsg);
         }
         return 0; // no v found
     }
@@ -50,7 +56,9 @@ public class ResumeManager {
             stmt.setString(16, resume.getImageBase64());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error adding resume version for user " + userId;
+            LogUtils.logError(e, errMsg);
+            throw new RuntimeException(errMsg);
         }
     }
 
@@ -82,7 +90,9 @@ public class ResumeManager {
                 resumes.add(resume);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            String errMsg = "Error getting resume versions for user " + userId;
+            LogUtils.logError(e, errMsg);
+            throw new RuntimeException(errMsg);
         }
         return resumes;
     }
