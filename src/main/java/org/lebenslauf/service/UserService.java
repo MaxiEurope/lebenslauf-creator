@@ -11,6 +11,7 @@ public class UserService {
 
     public UserService(DBConnection db) {
         this.userManager = new UserManager(db);
+        this.userManager.logManagerInfo();
     }
 
     public void addUser(User user) {

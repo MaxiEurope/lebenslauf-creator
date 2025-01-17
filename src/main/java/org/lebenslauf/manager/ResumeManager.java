@@ -13,6 +13,11 @@ public class ResumeManager extends BaseManager {
         super(db);
     }
 
+    @Override
+    public void logManagerInfo() {
+        LogUtils.logInfo("ResumeManager initialized");
+    }
+
     public int getMaxVersionNumberForUser(int userId) {
         String query = "SELECT MAX(version_number) AS max_version FROM resume_versions WHERE user_id = ?";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {

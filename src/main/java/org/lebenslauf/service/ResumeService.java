@@ -11,6 +11,7 @@ public class ResumeService {
 
     public ResumeService(DBConnection db) {
         this.resumeManager = new ResumeManager(db);
+        this.resumeManager.logManagerInfo();
     }
 
     public int getNextVersionNumber(int userId) {

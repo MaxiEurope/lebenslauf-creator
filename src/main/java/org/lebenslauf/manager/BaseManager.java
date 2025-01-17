@@ -6,4 +6,6 @@ public abstract class BaseManager {
     public BaseManager(DBConnection db) {
         this.db = db;
     }
+
+    public abstract void logManagerInfo();
 }

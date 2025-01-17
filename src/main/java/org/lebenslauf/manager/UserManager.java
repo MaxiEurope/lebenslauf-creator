@@ -11,6 +11,11 @@ public class UserManager extends BaseManager {
         super(db);
     }
 
+    @Override
+    public void logManagerInfo() {
+        LogUtils.logInfo("UserManager initialized");
+    }
+
     public void addUser(User user) {
         String query = "INSERT INTO users (Full_Name, Email, Password) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
