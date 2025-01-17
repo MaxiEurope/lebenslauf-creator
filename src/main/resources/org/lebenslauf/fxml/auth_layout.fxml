@@ -7,7 +7,7 @@
 <VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml">
     <Label text="Login / Register" style="-fx-font-size: 24px;"/>
     <TabPane prefWidth="400" prefHeight="300">
-        <Tab text="Login">
+        <Tab text="Login" closable="false">
             <VBox spacing="10" alignment="CENTER">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
@@ -18,7 +18,7 @@
                 <Label fx:id="loginMessage" textFill="red"/>
             </VBox>
         </Tab>
-        <Tab text="Register">
+        <Tab text="Register" closable="false">
             <VBox spacing="10" alignment="CENTER">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>

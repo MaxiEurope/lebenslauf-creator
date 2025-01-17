@@ -60,6 +60,8 @@ public class ResumeController {
     @FXML private void initialize() {
         genderComboBox.getItems().addAll("Männlich", "Weiblich", "Divers");
         nationalityComboBox.getItems().addAll("Deutsch", "Österreichisch", "Schweizerisch", "Andere");
+        birthDateField.getEditor().setDisable(true);
+        birthDateField.getEditor().setOpacity(1);
 
         setupListeners();
 
