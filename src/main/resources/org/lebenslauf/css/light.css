@@ -16,6 +16,30 @@
     -fx-padding: 5px;
 }
 
+.combo-box .list-cell {
+    -fx-text-fill: #000000;
+    -fx-background-color: #f0f0f0;
+}
+
+.combo-box .context-menu {
+    -fx-background-color: #f0f0f0;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #000000;
+}
+
+.text-area {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #000000;
+    -fx-border-color: #cccccc;
+}
+
+.text-area .content {
+    -fx-background-color: #f0f0f0;
+}
+
 .button:hover {
     -fx-background-color: #e0e0e0;
 }
@@ -36,6 +60,10 @@
 .custom-menu-item {
     -fx-background-color: #ffffff;
     -fx-text-fill: #000000;
+}
+
+.custom-menu-item > .content > .hbox > .label {
+    -fx-text-fill: #000000; !important;
 }
 
 .scroll-pane {

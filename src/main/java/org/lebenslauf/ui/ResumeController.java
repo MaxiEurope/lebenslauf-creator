@@ -1,7 +1,5 @@
 package org.lebenslauf.ui;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import org.lebenslauf.model.User;
 import org.lebenslauf.model.Resume;
 import org.lebenslauf.service.UserService;
@@ -19,6 +17,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.beans.value.ChangeListener;
 
 import java.io.*;
@@ -266,7 +266,7 @@ public class ResumeController {
             @Override
             protected byte[] call() throws Exception {
                 String selectedLanguage = translationLanguageComboBox.getValue();
-                return pdfApiService.generatePdfFromResume(resume, selectedLanguage);
+                return pdfApiService.generatePdfFromResume(resume, selectedLanguage, resume.getFontSize(), resume.getFontColor(), resume.getFontFamily(), resume.getTheme());
             }
         };
 
@@ -311,7 +311,7 @@ public class ResumeController {
             @Override
             protected String call() throws Exception {
                 String selectedLanguage = translationLanguageComboBox.getValue();
-                return pdfApiService.generateHtmlFromResume(resume, selectedLanguage);
+                return pdfApiService.generateHtmlFromResume(resume, selectedLanguage, resume.getFontSize(), resume.getFontColor(), resume.getFontFamily(), resume.getTheme());
             }
         };
 

@@ -70,6 +70,17 @@
             <MenuItem text="Toggle Dark/White" onAction="#handleToggleTheme"/>
         </Menu>
 
+        <Menu text="Translation">
+            <CustomMenuItem>
+                <content>
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Translate to:"/>
+                        <ComboBox fx:id="translationLanguageComboBox"/>
+                    </HBox>
+                </content>
+            </CustomMenuItem>
+        </Menu>
+
     </MenuBar>
 
     <ScrollPane GridPane.rowIndex="1" GridPane.columnIndex="0" fitToWidth="true" fitToHeight="true">
@@ -106,8 +117,6 @@
             <Button text="Select Image" onAction="#handleImageUpload"/>
             <Label fx:id="imagePathLabel"/>
             <Button fx:id="submitButton" text="Submit" onAction="#handleSubmit"/>
-            <Label text="Translate to:"/>
-            <ComboBox fx:id="translationLanguageComboBox"/>
             <Label fx:id="confirmationLabel"/>
         </VBox>
     </ScrollPane>

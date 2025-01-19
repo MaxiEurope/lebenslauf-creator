@@ -16,41 +16,34 @@
     -fx-padding: 5px;
 }
 
-/* Ensure ComboBox text is white */
 .combo-box .list-cell {
     -fx-text-fill: #ffffff;
     -fx-background-color: #3c3f41;
 }
 
-/* Ensure dropdown list has dark background */
 .combo-box .context-menu {
     -fx-background-color: #3c3f41;
 }
 
-/* Fix for text inside ComboBox dropdown */
 .combo-box-popup .list-view {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #ffffff;
 }
 
-/* Ensure text areas (Experience, Education) are correctly styled */
 .text-area {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #ffffff;
     -fx-border-color: #555555;
 }
 
-/* Fix for text inside the scrollable area of TextArea */
 .text-area .content {
     -fx-background-color: #3c3f41;
 }
 
-/* Ensure button hover effect */
 .button:hover {
     -fx-background-color: #4a4d50;
 }
 
-/* Fix dropdowns in the menu bar */
 .menu-bar {
     -fx-background-color: #2b2b2b;
 }
@@ -64,13 +57,11 @@
     -fx-background-color: #555555;
 }
 
-/* Ensure custom menu items (Font, Theme settings) are correctly styled */
 .custom-menu-item {
     -fx-background-color: #2b2b2b;
     -fx-text-fill: #ffffff;
 }
 
-/* Ensure ScrollPane styling is consistent */
 .scroll-pane {
     -fx-background: #2b2b2b;
     -fx-border-color: #555555;
@@ -80,13 +71,11 @@
     -fx-background-color: #2b2b2b;
 }
 
-/* Ensure WebView background matches */
 .web-view {
     -fx-background-color: #2b2b2b;
     -fx-border-color: #555555;
 }
 
-/* Ensure container elements match the theme */
 .vbox, .hbox, .grid-pane {
     -fx-background-color: #2b2b2b;
 }
