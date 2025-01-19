@@ -5,14 +5,16 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.web.WebView?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml/1"  hgap="10" vgap="10" minWidth="800" minHeight="800">
-
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="10" vgap="10" minWidth="800" minHeight="800" fx:controller="org.lebenslauf.controller.ResumeController">
     <columnConstraints>
         <ColumnConstraints minWidth="120" />
         <ColumnConstraints minWidth="300" />
@@ -23,55 +25,82 @@
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
 
+    <!-- Menüband hinzufügen -->
+    <MenuBar GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="3">
+        <Menu text="Optionen">
+            <Menu text="Schriftgröße">
+                <MenuItem text="10" />
+                <MenuItem text="12" />
+                <MenuItem text="14" />
+                <MenuItem text="16" />
+            </Menu>
+            <Menu text="Schriftfarbe">
+                <MenuItem text="Schwarz" />
+                <MenuItem text="Weiß" />
+                <MenuItem text="Rot" />
+                <MenuItem text="Blau" />
+            </Menu>
+            <Menu text="Schriftart">
+                <MenuItem text="Arial" />
+                <MenuItem text="Times New Roman" />
+                <MenuItem text="Courier New" />
+                <MenuItem text="Verdana" />
+            </Menu>
+            <Menu text="Theme">
+                <MenuItem text="1" />
+                <MenuItem text="2" />
+                <MenuItem text="3" />
+                <MenuItem text="4" />
+            </Menu>
+        </Menu>
+    </MenuBar>
 
-    <Label text="First Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-    <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Button text="Toggle Theme" onAction="#handleToggleTheme" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <Label text="First Name:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <TextField fx:id="firstNameField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-    <Label text="Last Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-    <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Label text="Last Name:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <TextField fx:id="lastNameField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-    <Label text="Gender:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <ComboBox fx:id="genderComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label text="Gender:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="genderComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-    <Label text="Birth Place:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-    <TextField fx:id="birthPlaceField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <Label text="Birth Place:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <TextField fx:id="birthPlaceField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-    <Label text="Birth Date:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-    <DatePicker fx:id="birthDateField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Label text="Birth Date:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+    <DatePicker fx:id="birthDateField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
-    <Label text="City:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-    <TextField fx:id="cityField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    <Label text="City:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+    <TextField fx:id="cityField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-    <Label text="Address:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-    <TextField fx:id="addressField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    <Label text="Address:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+    <TextField fx:id="addressField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
 
-    <Label text="Postal Code:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-    <TextField fx:id="postalCodeField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+    <Label text="Postal Code:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+    <TextField fx:id="postalCodeField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
 
-    <Label text="Nationality:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-    <ComboBox fx:id="nationalityComboBox" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+    <Label text="Nationality:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="nationalityComboBox" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
 
-    <Label text="Phone Number:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
-    <TextField fx:id="phoneNumberField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+    <Label text="Phone Number:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+    <TextField fx:id="phoneNumberField" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
 
-    <Label text="Email:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
-    <TextField fx:id="emailField" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+    <Label text="Email:" GridPane.rowIndex="12" GridPane.columnIndex="0"/>
+    <TextField fx:id="emailField" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
 
-    <Label text="Experience:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
-    <TextArea fx:id="experienceField" prefRowCount="5" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+    <Label text="Experience:" GridPane.rowIndex="13" GridPane.columnIndex="0"/>
+    <TextArea fx:id="experienceField" prefRowCount="5" GridPane.rowIndex="13" GridPane.columnIndex="1"/>
 
-    <Label text="Education:" GridPane.rowIndex="12" GridPane.columnIndex="0"/>
-    <TextArea fx:id="educationField" prefRowCount="5" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
+    <Label text="Education:" GridPane.rowIndex="14" GridPane.columnIndex="0"/>
+    <TextArea fx:id="educationField" prefRowCount="5" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
 
-    <Button text="Select Image" onAction="#handleImageUpload" GridPane.rowIndex="13" GridPane.columnIndex="0"/>
-    <Label fx:id="imagePathLabel" GridPane.rowIndex="13" GridPane.columnIndex="1"/>
+    <Button text="Select Image" onAction="#handleImageUpload" GridPane.rowIndex="15" GridPane.columnIndex="0"/>
+    <Label fx:id="imagePathLabel" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
 
-    <Button fx:id="submitButton" text="Submit" onAction="#handleSubmit" GridPane.rowIndex="14" GridPane.columnIndex="1"/>
+    <Button fx:id="submitButton" text="Submit" onAction="#handleSubmit" GridPane.rowIndex="16" GridPane.columnIndex="1"/>
 
-    <Label text="Translate to:" GridPane.rowIndex="15" GridPane.columnIndex="0"/>
-    <ComboBox fx:id="translationLanguageComboBox" GridPane.rowIndex="15" GridPane.columnIndex="1"/>
+    <Label fx:id="confirmationLabel" GridPane.rowIndex="17" GridPane.columnIndex="1"/>
 
-    <Label fx:id="confirmationLabel" GridPane.rowIndex="16" GridPane.columnIndex="1"/>
-
-    <WebView fx:id="pdfPreviewWebView" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="17"/>
+    <WebView fx:id="pdfPreviewWebView" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="16"/>
 </GridPane>
