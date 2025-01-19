@@ -1,0 +1,57 @@
+/* light.css */
+.root {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.label {
+    -fx-text-fill: #000000;
+}
+
+.text-field, .combo-box, .date-picker, .text-area, .button {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #000000;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.menu-bar {
+    -fx-background-color: #ffffff;
+}
+
+.menu, .menu-item {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.menu-item:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.custom-menu-item {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.scroll-pane {
+    -fx-background: #ffffff;
+    -fx-border-color: #cccccc;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #ffffff;
+}
+
+.web-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+}
+
+.vbox, .hbox, .grid-pane {
+    -fx-background-color: #ffffff;
+}
