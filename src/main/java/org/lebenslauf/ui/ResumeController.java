@@ -1,5 +1,7 @@
 package org.lebenslauf.ui;
 
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import org.lebenslauf.model.User;
 import org.lebenslauf.model.Resume;
 import org.lebenslauf.service.UserService;
@@ -30,7 +32,7 @@ public class ResumeController {
     @FXML
     private TextField firstNameField, lastNameField, birthPlaceField, cityField, addressField, postalCodeField, phoneNumberField, emailField;
     @FXML
-    private ComboBox<String> genderComboBox, nationalityComboBox;
+    private ComboBox<String> genderComboBox, nationalityComboBox, fontSizeComboBox, fontColorComboBox, fontFamilyComboBox, themeComboBox;
     @FXML
     private DatePicker birthDateField;
     @FXML
@@ -45,6 +47,23 @@ public class ResumeController {
     @FXML
     private WebView pdfPreviewWebView;
 
+    private boolean isDarkMode = false;
+    private final String DARK_MODE_CSS = getClass().getResource("src/main/resources/org.lebenslauf.css/dark.css").toExternalForm();
+    private  final String LIGHT_MODE_CSS = getClass().getResource("src/main/resources/org.lebenslauf.css/light.css").toExternalForm();
+    @FXML
+    private Parent root;
+    @FXML
+    private void handleToggleTheme() {
+        Scene scene = root.getScene();
+        if (isDarkMode) {
+            scene.getStylesheets().remove(DARK_MODE_CSS);
+            scene.getStylesheets().add(LIGHT_MODE_CSS);
+        } else {
+            scene.getStylesheets().remove(LIGHT_MODE_CSS);
+            scene.getStylesheets().add(DARK_MODE_CSS);
+        }
+        isDarkMode = !isDarkMode;
+    }
     private String imageBase64;
     private final UserService userService;
     private final ResumeService resumeService;
@@ -66,6 +85,10 @@ public class ResumeController {
         birthDateField.getEditor().setOpacity(1);
         translationLanguageComboBox.getItems().addAll("None", "DE", "EN");
         translationLanguageComboBox.setValue("None");
+        fontSizeComboBox.getItems().addAll("10", "12", "14", "16");
+        fontColorComboBox.getItems().addAll("Schwarz", "Weiß", "Rot", "Blau");
+        fontFamilyComboBox.getItems().addAll("Arial", "Times New Roman", "Courier New", "Verdana");
+        themeComboBox.getItems().addAll("1", "2", "3", "4");
 
         setupListeners();
 
@@ -96,7 +119,12 @@ public class ResumeController {
 
         genderComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
         nationalityComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        fontSizeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        fontColorComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        fontFamilyComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        themeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
         birthDateField.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+
     }
 
     @FXML
@@ -209,6 +237,10 @@ public class ResumeController {
         resume.setNationality(nationalityComboBox.getValue() != null ? nationalityComboBox.getValue() : "N/A");
         resume.setPhoneNumber(phoneNumberField.getText());
         resume.setEmail(emailField.getText());
+        resume.setFontColor(fontColorComboBox.getValue() != null ? fontColorComboBox.getValue() : "Schwarz");
+        resume.setFontSize(fontSizeComboBox.getValue() != null ? fontSizeComboBox.getValue() : "12");
+        resume.setFontFamily(fontFamilyComboBox.getValue() != null ? fontFamilyComboBox.getValue() : "Arial");
+        resume.setTheme(themeComboBox.getValue() != null ? themeComboBox.getValue() : "1");
 
         List<String> expList = Arrays.asList(experienceField.getText().split("\\n"));
         resume.setExperience(expList);
