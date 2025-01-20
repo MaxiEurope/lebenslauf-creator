@@ -2,6 +2,11 @@ package org.lebenslauf.model;
 
 import java.util.List;
 
+/**
+ * Represents a resume object.
+ * 
+ * Contains personal information, experience, education, and styling options.
+ */
 public class Resume {
     private String firstName;
     private String lastName;
@@ -21,8 +26,6 @@ public class Resume {
     private String fontColor = "Schwarz";
     private String fontFamily = "Arial";
     private String theme = "1";
-
-    // Getter und Setter Methoden
 
     public String getFirstName() {
         return firstName;

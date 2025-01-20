@@ -1,5 +1,12 @@
 package org.lebenslauf.model;
 
+/**
+ * Represents a user object.
+ * 
+ * Contains the user's full name, email, and password.
+ * 
+ * The password is stored as a hash.
+ */
 public class User {
     private int id;
     private String fullName;
