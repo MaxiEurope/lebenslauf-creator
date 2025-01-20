@@ -24,8 +24,6 @@ public class Resume implements Serializable {
     private String fontFamily = "Arial";
     private String theme = "1";
 
-    // Getter und Setter Methoden
-
     public String getFirstName() {
         return firstName;
     }

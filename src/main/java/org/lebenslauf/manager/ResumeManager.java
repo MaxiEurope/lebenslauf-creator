@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manager class for resume operations.
+ */
 public class ResumeManager extends BaseManager {
     public ResumeManager(DBConnection db) {
         super(db);
@@ -18,6 +21,12 @@ public class ResumeManager extends BaseManager {
         LogUtils.logInfo("ResumeManager initialized");
     }
 
+    /**
+     * Get the maximum version number for a user.
+     *
+     * @param userId the user ID
+     * @return the maximum version number
+     */
     public int getMaxVersionNumberForUser(int userId) {
         String query = "SELECT MAX(version_number) AS max_version FROM resume_versions WHERE user_id = ?";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
@@ -34,6 +43,14 @@ public class ResumeManager extends BaseManager {
         return 0; // no v found
     }
 
+    /**
+     * Add a new version of the resume for a user.
+     * 
+     *
+     * @param userId the user ID
+     * @param versionNumber the version number
+     * @param resume the resume object
+     */
     public void addResumeVersion(int userId, int versionNumber, Resume resume) {
         String query = "INSERT INTO resume_versions (user_id, version_number, first_name, last_name, gender, birth_place, birth_date, city, address, postal_code, nationality, phone_number, email, experience, education, image_base64) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -62,6 +79,12 @@ public class ResumeManager extends BaseManager {
         }
     }
 
+    /**
+     * Get all resumes for a user.
+     *
+     * @param userId the user ID
+     * @return a list of resume objects
+     */
     public List<Resume> getResumeVersionsForUser(int userId) {
         String query = "SELECT * FROM resume_versions WHERE user_id = ? ORDER BY version_number ASC";
         List<Resume> resumes = new ArrayList<>();

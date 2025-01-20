@@ -9,9 +9,20 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Generate a PDF and a HTML preview from resume data.
+ * It interacts with an external API.
+ * 
+ * Ensure that the env variables are set with a valid API key.
+ */
 public class PdfApiService {
     private final String apiKey;
 
+    /**
+     * Reads the API key from the env variables.
+     * 
+     * If the API key is missing or empty, it shows an error dialog and throws a runtime exception.
+     */
     public PdfApiService() {
         this.apiKey = EnvUtils.getEnv("PDF_API_KEY");
         if (this.apiKey == null || this.apiKey.isEmpty()) {
@@ -24,6 +35,19 @@ public class PdfApiService {
         }
     }
 
+    /**
+     * Generate a PDF from resume data.
+     * 
+     * @param resume the resume object
+     * @param languageCode the language code
+     * @param fontSize the font size
+     * @param fontColor the font color
+     * @param fontFamily the font family
+     * @param theme the theme
+     * @return the PDF as a byte array
+     * @throws IOException if an I/O error occurs
+     * @throws URISyntaxException if the URI is invalid
+     */
     public byte[] generatePdfFromResume(Resume resume, String languageCode, String fontSize, String fontColor, String fontFamily, String theme) throws IOException, URISyntaxException {
         String jsonPayload = buildJsonPayload(resume, languageCode, fontSize, fontColor, fontFamily, theme);
 
@@ -53,6 +77,19 @@ public class PdfApiService {
         }
     }
 
+    /**
+     * Generate a HTML preview from resume data.
+     * 
+     * @param resume the resume object
+     * @param languageCode the language code
+     * @param fontSize the font size
+     * @param fontColor the font color
+     * @param fontFamily the font family
+     * @param theme the theme
+     * @return the HTML as a string
+     * @throws IOException if an I/O error occurs
+     * @throws URISyntaxException if the URI is invalid
+     */
     public String generateHtmlFromResume(Resume resume, String languageCode, String fontSize, String fontColor, String fontFamily, String theme) throws IOException, URISyntaxException {
         String jsonPayload = buildJsonPayload(resume, languageCode, fontSize, fontColor, fontFamily, theme);
 
@@ -82,6 +119,15 @@ public class PdfApiService {
         }
     }
 
+    /**
+     * Open a connection to the API.
+     * 
+     * @param jsonPayload the JSON payload
+     * @param requestHtml true if the request is for HTML, false for PDF
+     * @return the connection object
+     * @throws IOException if an I/O error occurs
+     * @throws URISyntaxException if the URI is invalid
+     */
     private HttpURLConnection openApiConnection(String jsonPayload, boolean requestHtml) throws IOException, URISyntaxException {
         String apiUrl = "https://api.maxi-script.com/pdf";
         URI uri = new URI(apiUrl);
@@ -106,6 +152,17 @@ public class PdfApiService {
         return connection;
     }
 
+    /**
+     * Build the JSON payload for the API.
+     * 
+     * @param resume the resume object
+     * @param languageCode the language code
+     * @param fontSize the font size
+     * @param fontColor the font color
+     * @param fontFamily the font family
+     * @param theme the theme
+     * @return the JSON payload as a string
+     */
     private String buildJsonPayload(Resume resume, String languageCode, String fontSize, String fontColor, String fontFamily, String theme) {
         String markdownContent = buildMarkdown(resume);
 
@@ -155,6 +212,12 @@ public class PdfApiService {
         return jsonPayload.toString();
     }
 
+    /**
+     * Build the markdown content for the resume.
+     * 
+     * @param resume the resume object
+     * @return the markdown content as a string
+     */
     private String buildMarkdown(Resume resume) {
         return "# Resume\n\n" +
                 "## Personal Information\n" +
@@ -169,8 +232,8 @@ public class PdfApiService {
                 "**Phone:** " + resume.getPhoneNumber() + "\n\n" +
                 "**Email:** " + resume.getEmail() + "\n\n" +
                 "## Experience\n" +
-                (resume.getExperience() != null ? String.join("\n- ", resume.getExperience()) : "") + "\n\n" +
+                (resume.getExperience() != null ? String.join("\n", resume.getExperience()) : "") + "\n\n" +
                 "## Education\n" +
-                (resume.getEducation() != null ? String.join("\n- ", resume.getEducation()) : "");
+                (resume.getEducation() != null ? String.join("\n", resume.getEducation()) : "");
     }
 }

@@ -3,6 +3,10 @@ package org.lebenslauf.util;
 import java.io.IOException;
 import java.util.logging.*;
 
+/**
+ * Utility class for logging messages with different levels.
+ * Logs go to "lebenslauf.log" and the console.
+ */
 public class LogUtils {
     private static final Logger LOGGER = Logger.getLogger(LogUtils.class.getName());
 
@@ -26,19 +30,42 @@ public class LogUtils {
         }
     }
 
+    /**
+     * Log an info message.
+     *
+     * @param message the message to log
+     */
     public static void logInfo(String message) {
         LOGGER.log(Level.INFO, message);
     }
 
+    /**
+     * Log an error message.
+     *
+     * @param ex the exception to log
+     * @param message the message to log
+     */
     public static void logError(Throwable ex, String message) {
         LOGGER.log(Level.SEVERE, message, ex);
     }
 
+    /**
+     * Log a warning message.
+     *
+     * @param message the message to log
+     */
     public static void logWarning(String message) {
         LOGGER.log(Level.WARNING, message);
     }
 }
 
+/**
+ * Custom formatter for coloring log messages.
+ * 
+ * INFO: yellow
+ * WARNING: white
+ * SEVERE: red
+ */
 class CustomColorFormatter extends Formatter {
     private static final String RESET = "\u001B[0m";
     private static final String YELLOW = "\u001B[33m";

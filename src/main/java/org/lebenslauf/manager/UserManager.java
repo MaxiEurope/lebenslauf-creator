@@ -6,6 +6,9 @@ import org.lebenslauf.util.LogUtils;
 import java.sql.*;
 import java.util.Optional;
 
+/**
+ * Manager class for the User entity.
+ */
 public class UserManager extends BaseManager {
     public UserManager(DBConnection db) {
         super(db);
@@ -16,6 +19,11 @@ public class UserManager extends BaseManager {
         LogUtils.logInfo("UserManager initialized");
     }
 
+    /**
+     * Add a new user to the database.
+     *
+     * @param user the user object
+     */
     public void addUser(User user) {
         String query = "INSERT INTO users (Full_Name, Email, Password) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
@@ -30,6 +38,12 @@ public class UserManager extends BaseManager {
         }
     }
 
+    /**
+     * Check if an email already exists in the database.
+     *
+     * @param email the email to check
+     * @return true if the email exists, false otherwise
+     */
     public boolean emailExists(String email) {
         String query = "SELECT id FROM users WHERE Email = ?";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
@@ -43,6 +57,12 @@ public class UserManager extends BaseManager {
         }
     }
 
+    /**
+     * Get a user by email.
+     *
+     * @param email the email
+     * @return an optional user object
+     */
     public Optional<User> getUserByEmail(String email) {
         String query = "SELECT * FROM users WHERE Email = ?";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
@@ -64,6 +84,11 @@ public class UserManager extends BaseManager {
         return Optional.empty();
     }
 
+    /**
+     * Update a user in the database.
+     *
+     * @param user the user object
+     */
     public void updateUser(User user) {
         String query = "UPDATE users SET Full_Name = ?, Email = ?, Password = ? WHERE id = ?";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
@@ -79,6 +104,12 @@ public class UserManager extends BaseManager {
         }
     }
 
+    /**
+     * Get a user by ID.
+     *
+     * @param id the user ID
+     * @return an optional user object
+     */
     public Optional<User> getUserById(int id) {
         String query = "SELECT * FROM users WHERE id = ?";
         try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
