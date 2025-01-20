@@ -22,7 +22,6 @@ public class ResumeService {
 
     // Base folder where all user resume files will be saved
     private static final String BASE_FOLDER = "user_resumes/";
-
     /**
      * Constructor.
      *
