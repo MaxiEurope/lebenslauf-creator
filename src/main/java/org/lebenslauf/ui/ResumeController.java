@@ -17,6 +17,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.beans.value.ChangeListener;
 
 import java.io.*;
@@ -30,7 +32,7 @@ public class ResumeController {
     @FXML
     private TextField firstNameField, lastNameField, birthPlaceField, cityField, addressField, postalCodeField, phoneNumberField, emailField;
     @FXML
-    private ComboBox<String> genderComboBox, nationalityComboBox;
+    private ComboBox<String> genderComboBox, nationalityComboBox, fontSizeComboBox, fontColorComboBox, fontFamilyComboBox, themeComboBox;
     @FXML
     private DatePicker birthDateField;
     @FXML
@@ -41,9 +43,15 @@ public class ResumeController {
     private Button submitButton;
     @FXML
     private ComboBox<String> translationLanguageComboBox;
-
     @FXML
     private WebView pdfPreviewWebView;
+
+    private boolean isDarkMode = false;
+    private final String DARK_MODE_CSS = getClass().getResource("/org/lebenslauf/css/dark.css").toExternalForm();
+    private final String LIGHT_MODE_CSS = getClass().getResource("/org/lebenslauf/css/light.css").toExternalForm();
+
+    @FXML
+    private Parent root;
 
     private String imageBase64;
     private final UserService userService;
@@ -59,13 +67,26 @@ public class ResumeController {
         this.loggedInUser = loggedInUser;
     }
 
-    @FXML private void initialize() {
+    @FXML
+    private void initialize() {
         genderComboBox.getItems().addAll("Männlich", "Weiblich", "Divers");
+        genderComboBox.setValue("Choose");
         nationalityComboBox.getItems().addAll("Deutsch", "Österreichisch", "Schweizerisch", "Andere");
+        nationalityComboBox.setValue("Choose");
         birthDateField.getEditor().setDisable(true);
         birthDateField.getEditor().setOpacity(1);
+
         translationLanguageComboBox.getItems().addAll("None", "DE", "EN");
         translationLanguageComboBox.setValue("None");
+
+        fontSizeComboBox.getItems().addAll("10", "12", "14", "16");
+        fontSizeComboBox.setValue("12");
+        fontColorComboBox.getItems().addAll("Schwarz", "Weiß", "Rot", "Blau");
+        fontColorComboBox.setValue("Schwarz");
+        fontFamilyComboBox.getItems().addAll("Arial", "Times New Roman", "Courier New", "Verdana");
+        fontFamilyComboBox.setValue("Arial");
+        themeComboBox.getItems().addAll("1", "2", "3", "4");
+        themeComboBox.setValue("1");
 
         setupListeners();
 
@@ -78,6 +99,19 @@ public class ResumeController {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+    }
+
+    @FXML
+    private void handleToggleTheme() {
+        Scene scene = root.getScene();
+        if (isDarkMode) {
+            scene.getStylesheets().remove(DARK_MODE_CSS);
+            scene.getStylesheets().add(LIGHT_MODE_CSS);
+        } else {
+            scene.getStylesheets().remove(LIGHT_MODE_CSS);
+            scene.getStylesheets().add(DARK_MODE_CSS);
+        }
+        isDarkMode = !isDarkMode;
     }
 
     private void setupListeners() {
@@ -96,6 +130,10 @@ public class ResumeController {
 
         genderComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
         nationalityComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        fontSizeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        fontColorComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        fontFamilyComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        themeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
         birthDateField.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
     }
 
@@ -128,7 +166,6 @@ public class ResumeController {
                 imageBase64 = "data:" + mimeType + ";base64," + Base64.getEncoder().encodeToString(bytes);
 
                 LogUtils.logInfo("Image Base64 str: " + imageBase64); // debug
-
                 resumeChanged.set(true);
             } catch (IOException e) {
                 LogUtils.logError(e, "Error reading image file");
@@ -210,6 +247,11 @@ public class ResumeController {
         resume.setPhoneNumber(phoneNumberField.getText());
         resume.setEmail(emailField.getText());
 
+        resume.setFontColor(fontColorComboBox.getValue() != null ? fontColorComboBox.getValue() : "Schwarz");
+        resume.setFontSize(fontSizeComboBox.getValue() != null ? fontSizeComboBox.getValue() : "12");
+        resume.setFontFamily(fontFamilyComboBox.getValue() != null ? fontFamilyComboBox.getValue() : "Arial");
+        resume.setTheme(themeComboBox.getValue() != null ? themeComboBox.getValue() : "1");
+
         List<String> expList = Arrays.asList(experienceField.getText().split("\\n"));
         resume.setExperience(expList);
         List<String> eduList = Arrays.asList(educationField.getText().split("\\n"));
@@ -224,7 +266,7 @@ public class ResumeController {
             @Override
             protected byte[] call() throws Exception {
                 String selectedLanguage = translationLanguageComboBox.getValue();
-                return pdfApiService.generatePdfFromResume(resume, selectedLanguage);
+                return pdfApiService.generatePdfFromResume(resume, selectedLanguage, resume.getFontSize(), resume.getFontColor(), resume.getFontFamily(), resume.getTheme());
             }
         };
 
@@ -269,15 +311,13 @@ public class ResumeController {
             @Override
             protected String call() throws Exception {
                 String selectedLanguage = translationLanguageComboBox.getValue();
-                return pdfApiService.generateHtmlFromResume(resume, selectedLanguage);
+                return pdfApiService.generateHtmlFromResume(resume, selectedLanguage, resume.getFontSize(), resume.getFontColor(), resume.getFontFamily(), resume.getTheme());
             }
         };
 
         previewTask.setOnSucceeded(event -> {
             String htmlContent = previewTask.getValue();
-
             pdfPreviewWebView.getEngine().loadContent(htmlContent, "text/html");
-
             resumeChanged.set(false);
         });
 

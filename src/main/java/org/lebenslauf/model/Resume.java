@@ -17,6 +17,10 @@ public class Resume {
     private List<String> experience;
     private List<String> education;
     private String imageBase64;
+    private String fontSize = "12";
+    private String fontColor = "Schwarz";
+    private String fontFamily = "Arial";
+    private String theme = "1";
 
     // Getter und Setter Methoden
 
@@ -132,6 +136,40 @@ public class Resume {
         this.imageBase64 = imageBase64;
     }
 
+    public String getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(String fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public String getFontColor() {
+        return fontColor;
+    }
+
+    public void setFontColor(String fontColor) {
+        this.fontColor = fontColor;
+    }
+
+    public String getFontFamily() {
+        return fontFamily;
+    }
+
+    public void setFontFamily(String fontFamily) {
+        this.fontFamily = fontFamily;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+
+
     @Override
     public String toString() {
         return "Resume{" +
@@ -149,8 +187,14 @@ public class Resume {
                 ", experience=" + experience +
                 ", education=" + education +
                 ", imageBase64='" + (imageBase64 != null ? "[Image Data]" : "null") + '\'' +
+                ", fontSize='" + fontSize + '\'' +
+                ", fontColor='" + fontColor + '\'' +
+                ", fontFamily='" + fontFamily + '\'' +
+                ", theme='" + theme + '\'' +
                 '}';
     }
 
 
 }
+
+

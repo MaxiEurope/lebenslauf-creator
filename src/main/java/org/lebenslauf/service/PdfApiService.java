@@ -24,8 +24,8 @@ public class PdfApiService {
         }
     }
 
-    public byte[] generatePdfFromResume(Resume resume, String languageCode) throws IOException, URISyntaxException {
-        String jsonPayload = buildJsonPayload(resume, languageCode);
+    public byte[] generatePdfFromResume(Resume resume, String languageCode, String fontSize, String fontColor, String fontFamily, String theme) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume, languageCode, fontSize, fontColor, fontFamily, theme);
 
         HttpURLConnection connection = openApiConnection(jsonPayload, false);
 
@@ -53,8 +53,8 @@ public class PdfApiService {
         }
     }
 
-    public String generateHtmlFromResume(Resume resume, String languageCode) throws IOException, URISyntaxException {
-        String jsonPayload = buildJsonPayload(resume, languageCode);
+    public String generateHtmlFromResume(Resume resume, String languageCode, String fontSize, String fontColor, String fontFamily, String theme) throws IOException, URISyntaxException {
+        String jsonPayload = buildJsonPayload(resume, languageCode, fontSize, fontColor, fontFamily, theme);
 
         HttpURLConnection connection = openApiConnection(jsonPayload, true);
 
@@ -106,7 +106,7 @@ public class PdfApiService {
         return connection;
     }
 
-    private String buildJsonPayload(Resume resume, String languageCode) {
+    private String buildJsonPayload(Resume resume, String languageCode, String fontSize, String fontColor, String fontFamily, String theme) {
         String markdownContent = buildMarkdown(resume);
 
         StringBuilder jsonPayload = new StringBuilder();
@@ -115,6 +115,11 @@ public class PdfApiService {
         if (languageCode != null && !"None".equalsIgnoreCase(languageCode)) {
             jsonPayload.append("\"lang\":\"").append(languageCode).append("\",");
         }
+
+        jsonPayload.append("\"font_size\":\"").append(fontSize).append("\",")
+            .append("\"font_color\":\"").append(fontColor).append("\",")
+            .append("\"font_family\":\"").append(fontFamily).append("\",")
+            .append("\"theme\":\"").append(theme).append("\",");
 
         jsonPayload.append("\"markdown\":\"")
             .append(markdownContent.replace("\"", "\\\"").replace("\n", "\\n"))
