@@ -6,6 +6,10 @@ import org.lebenslauf.util.LogUtils;
 
 import java.sql.*;
 
+/**
+ * Manage the connection to the MySQL database.
+ * Uses env variables for database credentials.
+ */
 public class DBConnection {
 
     // Database credentials
@@ -22,6 +26,15 @@ public class DBConnection {
         this(DEFAULT_DB_URL, USER, PASS);
     }
 
+    /**
+     * DBConnection instance.
+     *
+     * @param customDbUrl the custom database URL to use. Uses the default database URL if not provided.
+     * @param user the username
+     * @param pass the password
+     * @throws IllegalArgumentException if 'DB_USER' is missing or empty
+     * @throws IllegalArgumentException if 'DB_PASS' is missing or empty
+     */
     public DBConnection(String customDbUrl, String user, String pass) {
         if (USER == null || USER.isEmpty()) {
             DialogUtils.showErrorDialog(
@@ -42,7 +55,13 @@ public class DBConnection {
         this.dbUrl = (customDbUrl == null || customDbUrl.isEmpty()) ? DEFAULT_DB_URL : customDbUrl;
     }
 
-    // Method to establish the connection
+    
+    /**
+     * Establishes a connection to the MySQL database.
+     *
+     * @return true if the connection is successful.
+     * @throws SQLException if a database access error occurs.
+     */
     public boolean connect() {
         try {
             conn = DriverManager.getConnection(dbUrl, USER, PASS);
@@ -62,6 +81,9 @@ public class DBConnection {
         return conn;
     }
 
+    /**
+     * Disconnects from the database.
+     */
     public void disconnect() {
         try {
             if (conn != null) { conn.close(); }

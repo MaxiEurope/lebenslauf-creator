@@ -6,9 +6,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class for loading and accessing environment variables from the .env file.
+ */
 public class EnvUtils {
     public static Map<String, String> envVariables = null;
 
+    /**
+     * Load environment variables from the specified file.
+     *
+     * @param path the path to the file containing environment variables
+     */
     public static synchronized void loadEnvVariables(String path) {
         if (envVariables != null) {
             return;
@@ -39,6 +47,12 @@ public class EnvUtils {
         }
     }
 
+    /**
+     * Get the value of an environment variable.
+     *
+     * @param key the key of the environment variable
+     * @return the value of the environment variable
+     */
     public static String getEnv(String key) {
         if (envVariables == null) {
             loadEnvVariables(".env");

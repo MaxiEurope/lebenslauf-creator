@@ -17,6 +17,9 @@ import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
+/**
+ * Controller class for the authentication layout.
+ */
 public class AuthController {
 
     @FXML
@@ -35,11 +38,22 @@ public class AuthController {
     // TODO: load resume (from quick saving)
     private final ResumeService resumeService;
 
+    /**
+     * Constructor.
+     * 
+     * @param userService the user service
+     * @param resumeService the resume service
+     */
     public AuthController(UserService userService, ResumeService resumeService) {
         this.userService = userService;
         this.resumeService = resumeService;
     }
 
+    /**
+     * Initializes the controller.
+     * 
+     * Functionality to login/register by using the Enter key when the focus is on the password field.
+     */
     @FXML
     private void initialize() {
         loginPasswordField.setOnKeyPressed(event -> {
@@ -55,6 +69,17 @@ public class AuthController {
         });
     }
 
+    /**
+     * Handle the login button click event.
+     * 
+     * Validates the user login and switches to the main layout if successful.
+     * 
+     * If the login is successful, the user is stored in the loggedInUser field.
+     * 
+     * If the login is unsuccessful, an error message is displayed.
+     * 
+     * Uses a Task to perform the login operation in a background thread (avoid freezing the UI).
+     */
     @FXML
     private void handleLogin() {
         String email = loginEmailField.getText();
@@ -102,7 +127,13 @@ public class AuthController {
         new Thread(loginTask).start();
     }
 
-
+    /**
+     * Handle the register button click event.
+     * 
+     * Registers a new user and displays a message if successful.
+     * 
+     * Uses a Task to perform the registration operation in a background thread (avoid freezing the UI).
+     */
     @FXML
     private void handleRegister() {
         String fullName = registerFullNameField.getText();
@@ -157,6 +188,9 @@ public class AuthController {
         new Thread(registerTask).start();
     }
 
+    /**
+     * Switch to the main layout.
+     */
     private void switchToMainLayout() {
         Platform.runLater(() -> {
             try {

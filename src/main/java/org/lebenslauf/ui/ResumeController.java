@@ -28,6 +28,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Controller class for the resume layout.
+ */
 public class ResumeController {
     @FXML
     private TextField firstNameField, lastNameField, birthPlaceField, cityField, addressField, postalCodeField, phoneNumberField, emailField;
@@ -67,6 +70,11 @@ public class ResumeController {
         this.loggedInUser = loggedInUser;
     }
 
+    /**
+     * Initializes the controller with default values and listeners.
+     * 
+     * A timeline is set up to update the preview every 5 seconds if the resume has changed.
+     */
     @FXML
     private void initialize() {
         genderComboBox.getItems().addAll("Männlich", "Weiblich", "Divers");
@@ -101,6 +109,9 @@ public class ResumeController {
         timeline.play();
     }
 
+    /**
+     * Toggles the theme of the application.
+     */
     @FXML
     private void handleToggleTheme() {
         Scene scene = root.getScene();
@@ -114,6 +125,11 @@ public class ResumeController {
         isDarkMode = !isDarkMode;
     }
 
+    /**
+     * Sets up listeners for the input fields so that the resumeChanged flag is set to true when the resume is modified.
+     * 
+     * The flag is used to update the preview every 5 seconds if the resume has changed.
+     */
     private void setupListeners() {
         ChangeListener<String> textChangeListener = (observable, oldValue, newValue) -> resumeChanged.set(true);
 
@@ -137,6 +153,12 @@ public class ResumeController {
         birthDateField.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
     }
 
+    /**
+     * Handles the image upload button click event.
+     * 
+     * Opens a file chooser dialog to select an image file (jpg, jpeg, png).
+     * The image is read and converted to a base64 string.
+     */
     @FXML
     private void handleImageUpload() {
         Window window = imagePathLabel.getScene().getWindow();
@@ -181,6 +203,14 @@ public class ResumeController {
         }
     }
 
+    /**
+     * Handles the submit button click event.
+     * 
+     * Validates the input fields and saves the resume data to the database.
+     * A PDF is generated from the resume and saved to the filesystem.
+     * 
+     * Thread to save the resume data and to avoid freezing the UI.
+     */
     @FXML
     private void handleSubmit() {
         if (firstNameField.getText() == null || firstNameField.getText().trim().isEmpty()) {
@@ -232,6 +262,11 @@ public class ResumeController {
         new Thread(saveResumeTask).start();
     }
 
+    /**
+     * Creates a Resume object from the input fields.
+     * 
+     * @return the Resume object
+     */
     private Resume getResume() {
         Resume resume = new Resume();
         resume.setFirstName(firstNameField.getText());
@@ -261,6 +296,13 @@ public class ResumeController {
         return resume;
     }
 
+    /**
+     * Generates a PDF from the resume data.
+     * 
+     * The PDF is saved to the filesystem.
+     * 
+     * @param resume the Resume object
+     */
     private void generatePdfFromResume(Resume resume) {
         Task<byte[]> pdfTask = new Task<>() {
             @Override
@@ -304,6 +346,11 @@ public class ResumeController {
         new Thread(pdfTask).start();
     }
 
+    /**
+     * Updates the HTML preview of the resume.
+     * 
+     * The preview is updated with the latest resume data.
+     */
     private void updatePreview() {
         Resume resume = getResume();
 

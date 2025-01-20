@@ -13,6 +13,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main application class for the lebenslauft-creator app.
+ * It extends the JavaFX Application class.
+ * It initializes the primary stage, connects to the database, and loads the scene.
+ */
 public class MainApp extends Application {
 
     private static Stage primaryStage;
