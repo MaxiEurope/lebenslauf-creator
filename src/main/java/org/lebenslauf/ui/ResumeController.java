@@ -45,6 +45,8 @@ public class ResumeController {
     private ComboBox<String> translationLanguageComboBox;
     @FXML
     private WebView pdfPreviewWebView;
+    @FXML
+    private Button quickSaveButton, quickLoadButton;
 
     private boolean isDarkMode = false;
     private final String DARK_MODE_CSS = getClass().getResource("/org/lebenslauf/css/dark.css").toExternalForm();
@@ -99,6 +101,45 @@ public class ResumeController {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+    }
+
+        // Save the resume as a quicksave
+        @FXML
+        private void handleQuickSave() {
+            Resume resume = getResume(); // Get current resume from fields
+            resumeService.quickSaveResume(loggedInUser.getId(), resume); // Save it using the ResumeService
+            DialogUtils.showInfoDialog("QuickSave completed!", "Info");
+        }
+
+            // Load the quicksaved resume into the form
+    @FXML
+    private void handleQuickLoad() {
+        Resume loadedResume = resumeService.loadQuickSavedResume(loggedInUser.getId());
+        if (loadedResume != null) {
+            // Fill in the form with the loaded resume data
+            firstNameField.setText(loadedResume.getFirstName());
+            lastNameField.setText(loadedResume.getLastName());
+            birthPlaceField.setText(loadedResume.getBirthPlace());
+            cityField.setText(loadedResume.getCity());
+            addressField.setText(loadedResume.getAddress());
+            postalCodeField.setText(loadedResume.getPostalCode());
+            phoneNumberField.setText(loadedResume.getPhoneNumber());
+            emailField.setText(loadedResume.getEmail());
+            List<String> eduList = loadedResume.getEducation();
+            List<String> expList = loadedResume.getExperience();
+            String educationText = String.join("\n", eduList);
+            String expirienceText = String.join("\n", expList);
+            educationField.setText(educationText);
+            experienceField.setText(expirienceText);
+            imageBase64 = loadedResume.getImageBase64();
+            imagePathLabel.setText("Loaded from quick save");
+            resumeChanged.set(true);
+            
+;
+        } else {
+            DialogUtils.showErrorDialog("No QuickSaved resume found for this user.", "Error");
+        }
     }
 
     @FXML
@@ -135,6 +176,8 @@ public class ResumeController {
         fontFamilyComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
         themeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
         birthDateField.valueProperty().addListener((obs, oldVal, newVal) -> resumeChanged.set(true));
+        quickSaveButton.setOnAction(event -> handleQuickSave());
+        quickLoadButton.setOnAction(event -> handleQuickLoad());
     }
 
     @FXML
