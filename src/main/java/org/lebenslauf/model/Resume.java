@@ -1,5 +1,6 @@
 package org.lebenslauf.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,8 @@ import java.util.List;
  * 
  * Contains personal information, experience, education, and styling options.
  */
-public class Resume {
+public class Resume implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String firstName;
     private String lastName;
     private String gender;

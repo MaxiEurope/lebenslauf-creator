@@ -80,7 +80,18 @@
                 </content>
             </CustomMenuItem>
         </Menu>
-
+        <Menu text="Quick Actions">
+            <CustomMenuItem>
+                <content>
+                    <Button fx:id="quickSaveButton" text="Quick Save" onAction="#handleQuickSave"/>
+                </content>
+            </CustomMenuItem>
+            <CustomMenuItem>
+                <content>
+                    <Button fx:id="quickLoadButton" text="Quick Load" onAction="#handleQuickLoad"/>
+                </content>
+            </CustomMenuItem>
+        </Menu>
     </MenuBar>
 
     <ScrollPane GridPane.rowIndex="1" GridPane.columnIndex="0" fitToWidth="true" fitToHeight="true">
