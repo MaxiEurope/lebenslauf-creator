@@ -57,6 +57,8 @@ public class MainApp extends Application {
         Scene scene;
         if (fxmlFile.contains("main_layout")) {
             scene = new Scene(loader.load(), 1000, 700);
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(MainApp.class.getResource("/org/lebenslauf/css/light.css").toExternalForm());
         } else {
             scene = new Scene(loader.load(), 600, 600);
         }
